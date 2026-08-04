@@ -1,6 +1,6 @@
 {
   "id": "/dashboard",
-  "name": "Student Study Planner",
+  "name": "Study Planner AI",
   "short_name": "StudyPlanner",
   "description": "AI-powered study planner and CBT exam simulator for JEE, NEET, UPSC, GATE, CAT, CUET, SSC & Banking \u2014 tasks, notes, goals, timetable, attendance, and an AI tutor.",
   "start_url": "/dashboard",
