@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block title %}
+Edit Reminder
+{% endblock %}
+
+{% block content %}
+
+<div class="wrapper">
+
+    <!-- Sidebar -->
+
+    <div class="sidebar">
+
+        <h3 class="text-center">🎓 Study Planner</h3>
+
+        <hr>
+
+        <a href="/dashboard">🏠 Dashboard</a>
+        <a href="/subjects">📚 Subjects</a>
+        <a href="/tasks">✅ Tasks</a>
+        <a href="/planner">📖 Study Planner</a>
+        <a href="/timetable">🗓️ Timetable</a>
+        <a href="/notes">📝 Notes</a>
+        <a href="/goals">🎯 Goals</a>
+        <a href="/attendance">📊 Attendance</a>
+        <a href="/analytics">📈 Analytics</a>
+        <a href="/reminders">🔔 Reminders</a>
+
+        <hr>
+
+        <a href="/logout">🚪 Logout</a>
+
+    </div>
+
+    <!-- Main Content -->
+
+    <div class="content">
+
+        <div class="topbar d-flex justify-content-between align-items-center">
+
+            <h2>✏ Edit Reminder</h2>
+
+            <a href="/reminders" class="btn btn-secondary">
+
+                ← Back
+
+            </a>
+
+        </div>
+
+        <div class="container-fluid mt-4">
+
+            <div class="card shadow p-4">
+
+                <form method="POST">
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+
+                            Reminder Title
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="title"
+                            class="form-control"
+                            value="{{ reminder.title }}"
+                            required>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+
+                            Reminder Date
+
+                        </label>
+
+                        <input
+                            type="date"
+                            name="date"
+                            class="form-control"
+                            value="{{ reminder.date }}"
+                            required>
+
+                    </div>
+
+                    <div class="mb-4">
+
+                        <label class="form-label">
+
+                            Reminder Time
+
+                        </label>
+
+                        <input
+                            type="time"
+                            name="time"
+                            class="form-control"
+                            value="{{ reminder.time }}"
+                            required>
+
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="btn btn-success">
+
+                        💾 Save Changes
+
+                    </button>
+
+                    <a
+                        href="/reminders"
+                        class="btn btn-secondary">
+
+                        Cancel
+
+                    </a>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

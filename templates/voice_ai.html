@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}
+Voice AI Tutor
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+<div class="card shadow">
+
+<div class="card-header bg-primary text-white">
+
+<h2>
+
+🎙 Voice AI Tutor
+
+</h2>
+
+</div>
+
+<div class="card-body text-center">
+
+<p>
+
+Click the button and ask your question.
+
+</p>
+
+<a
+href="/voice-question"
+class="btn btn-lg btn-danger">
+
+🎤 Start Listening
+
+</a>
+
+<hr>
+
+{% if question %}
+
+<h4>
+
+Question
+
+</h4>
+
+<div class="alert alert-secondary">
+
+{{ question }}
+
+</div>
+
+{% endif %}
+
+{% if answer %}
+
+<h4>
+
+AI Answer
+
+</h4>
+
+<div class="alert alert-success">
+
+<pre style="white-space:pre-wrap;">{{ answer }}</pre>
+
+</div>
+
+{% endif %}
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

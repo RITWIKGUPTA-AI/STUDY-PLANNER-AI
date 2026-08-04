@@ -1,0 +1,278 @@
+{% extends "base.html" %}
+
+{% block title %}
+Reminders
+{% endblock %}
+
+{% block content %}
+
+<div class="wrapper">
+
+    <!-- Sidebar -->
+
+    <div class="sidebar">
+
+        <h3 class="text-center">🎓 Study Planner</h3>
+
+        <hr>
+
+        <a href="/dashboard">🏠 Dashboard</a>
+        <a href="/subjects">📚 Subjects</a>
+        <a href="/tasks">✅ Tasks</a>
+        <a href="/planner">📖 Study Planner</a>
+        <a href="/timetable">🗓️ Timetable</a>
+        <a href="/notes">📝 Notes</a>
+        <a href="/goals">🎯 Goals</a>
+        <a href="/attendance">📊 Attendance</a>
+        <a href="/analytics">📈 Analytics</a>
+        <a href="/reminders">🔔 Reminders</a>
+
+        <hr>
+
+        <a href="/logout">🚪 Logout</a>
+
+    </div>
+
+    <!-- Main Content -->
+
+    <div class="content">
+
+        <!-- Topbar -->
+
+        <div class="topbar d-flex justify-content-between align-items-center">
+
+            <h2>🔔 Reminder Manager</h2>
+
+            <a href="/dashboard" class="btn btn-primary">
+
+                Dashboard
+
+            </a>
+
+        </div>
+
+        <div class="container-fluid mt-4">
+
+            <!-- Add Reminder -->
+
+            <div class="card shadow p-4 mb-4">
+
+                <h4 class="mb-3">
+
+                    ➕ Add Reminder
+
+                </h4>
+
+                <form method="POST">
+
+                    <div class="row">
+
+                        <div class="col-md-4">
+
+                            <input
+                                type="text"
+                                name="title"
+                                class="form-control"
+                                placeholder="Reminder Title"
+                                required>
+
+                        </div>
+
+                        <div class="col-md-3">
+
+                            <input
+                                type="date"
+                                name="date"
+                                class="form-control"
+                                required>
+
+                        </div>
+
+                        <div class="col-md-3">
+
+                            <input
+                                type="time"
+                                name="time"
+                                class="form-control"
+                                required>
+
+                        </div>
+
+                        <div class="col-md-2">
+
+                            <button class="btn btn-success w-100">
+
+                                Add
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+            <!-- Search -->
+
+            <div class="card shadow p-3 mb-4">
+
+                <form method="GET">
+
+                    <div class="row">
+
+                        <div class="col-md-10">
+
+                            <input
+                                type="text"
+                                name="search"
+                                class="form-control"
+                                placeholder="Search Reminder..."
+                                value="{{ request.args.get('search','') }}">
+
+                        </div>
+
+                        <div class="col-md-2">
+
+                            <button class="btn btn-primary w-100">
+
+                                🔍 Search
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+            <!-- Statistics -->
+
+            <div class="row mb-4">
+
+                <div class="col-md-4">
+
+                    <div class="card shadow text-center p-3">
+
+                        <h5>Total Reminders</h5>
+
+                        <h2>{{ total }}</h2>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="card shadow text-center p-3">
+
+                        <h5>Today's Reminders</h5>
+
+                        <h2>{{ today_count }}</h2>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="card shadow text-center p-3">
+
+                        <h5>Overdue</h5>
+
+                        <h2>{{ overdue }}</h2>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Reminder Table -->
+
+            <div class="card shadow p-3">
+
+                <table class="table table-hover">
+
+                    <thead class="table-primary">
+
+                        <tr>
+
+                            <th>Title</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th width="180">Actions</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    {% if reminders %}
+
+                        {% for reminder in reminders %}
+
+                        <tr>
+
+                            <td>{{ reminder.title }}</td>
+
+                            <td>{{ reminder.date }}</td>
+
+                            <td>{{ reminder.time }}</td>
+
+                            <td>
+
+                                <a
+                                    href="/reminders/edit/{{ loop.index0 }}"
+                                    class="btn btn-warning btn-sm">
+
+                                    ✏ Edit
+
+                                </a>
+
+                                <a
+                                    href="/reminders/delete/{{ loop.index0 }}"
+                                    class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Delete this reminder?')">
+
+                                    🗑 Delete
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <tr>
+
+                            <td colspan="4" class="text-center">
+
+                                📭 No Reminders Found
+
+                            </td>
+
+                        </tr>
+
+                    {% endif %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

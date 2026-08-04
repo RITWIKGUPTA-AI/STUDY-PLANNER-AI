@@ -1,0 +1,21 @@
+__pycache__/
+*.pyc
+
+.env
+
+.vscode/
+.idea/
+
+backup/
+
+instance/
+
+# User-uploaded files are temporary scratch space for AI processing and
+# are deleted right after use — never commit real uploads.
+static/uploads/*
+!static/uploads/.gitkeep
+static/pdfs/*
+!static/pdfs/.gitkeep
+
+# Per-user JSON data is generated at runtime — never ship real user data.
+data/*.json

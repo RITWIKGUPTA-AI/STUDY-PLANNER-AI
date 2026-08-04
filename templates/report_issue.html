@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Report an Issue{% endblock %}
+
+{% block content %}
+<div class="container mt-5" style="max-width:560px;">
+
+    <div class="card shadow-lg border-0" style="border-radius:var(--radius-lg);">
+        <div class="card-body p-4 p-md-5">
+
+            <div class="text-center mb-4">
+                <div style="font-size:2.2rem;">🛠️</div>
+                <h3 class="mt-2 mb-0">Report a Problem</h3>
+                <p class="text-muted small">
+                    Having trouble with an AI feature? Let us know and we'll
+                    look into it.
+                </p>
+            </div>
+
+            <form method="POST">
+
+                <label class="form-label">Which feature?</label>
+                <select name="feature" class="form-select" required>
+                    <option value="">Select a feature</option>
+                    <option>AI Tutor</option>
+                    <option>AI Study Plan</option>
+                    <option>AI Mock Test</option>
+                    <option>AI Flashcards</option>
+                    <option>AI Formula Sheet</option>
+                    <option>AI Revision Planner</option>
+                    <option>AI Quiz</option>
+                    <option>AI Daily Coach</option>
+                    <option>Exam Readiness</option>
+                    <option>AI Weakness Analysis</option>
+                    <option>AI Visual Explainer</option>
+                    <option>AI PDF Summarizer</option>
+                    <option>AI Image Solver</option>
+                    <option>Competitive Exam AI</option>
+                    <option>Other</option>
+                </select>
+
+                <label class="form-label mt-3">What went wrong?</label>
+                <textarea name="description" class="form-control" rows="4" required placeholder="e.g. I asked a question and it just showed an error message instead of an answer."></textarea>
+
+                <button type="submit" class="btn btn-primary w-100 mt-4">
+                    Submit Report
+                </button>
+
+            </form>
+
+            <p class="text-center small text-muted mt-3 mb-0">
+                <a href="{{ url_for('my_tickets') }}">View my past reports</a>
+            </p>
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}

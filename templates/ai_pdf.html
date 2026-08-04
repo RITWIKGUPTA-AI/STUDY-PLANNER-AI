@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}
+AI PDF Tutor
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+<div class="card shadow">
+
+<div class="card-header bg-danger text-white">
+
+<h2>📄 AI PDF Tutor</h2>
+
+</div>
+
+<div class="card-body">
+
+<form method="POST" enctype="multipart/form-data">
+
+<input
+type="file"
+name="pdf"
+accept=".pdf"
+class="form-control"
+required>
+
+<br>
+
+<button class="btn btn-danger">
+
+Upload PDF
+
+</button>
+
+</form>
+
+{% if summary %}
+
+<hr>
+
+<h4>AI Summary</h4>
+
+<div class="alert alert-light">
+
+<pre style="white-space:pre-wrap;">{{ summary }}</pre>
+
+</div>
+
+{% endif %}
+
+</div>
+
+</div>
+
+</div>
+
+{% include "partials/visual_aid.html" %}
+
+{% endblock %}

@@ -1,0 +1,304 @@
+{% extends "base.html" %}
+
+{% block title %}
+Attendance
+{% endblock %}
+
+{% block content %}
+
+<div class="wrapper">
+
+    <!-- Sidebar -->
+
+    <div class="sidebar">
+
+        <h3 class="text-center">🎓 Study Planner</h3>
+
+        <hr>
+
+        <a href="/dashboard">🏠 Dashboard</a>
+        <a href="/subjects">📚 Subjects</a>
+        <a href="/tasks">✅ Tasks</a>
+        <a href="/planner">📖 Study Planner</a>
+        <a href="/notes">📝 Notes</a>
+        <a href="/goals">🎯 Goals</a>
+        <a href="/attendance">📊 Attendance</a>
+        <a href="/analytics">📈 Analytics</a>
+
+        <hr>
+
+        <a href="/logout">🚪 Logout</a>
+
+    </div>
+
+    <!-- Main Content -->
+
+    <div class="content">
+
+        <!-- Topbar -->
+
+        <div class="topbar d-flex justify-content-between align-items-center">
+
+            <h2>📊 Attendance Manager</h2>
+
+            <a href="/dashboard" class="btn btn-primary">
+
+                Dashboard
+
+            </a>
+
+        </div>
+
+        <div class="container-fluid mt-4">
+
+            <!-- Add Attendance -->
+
+            <div class="card shadow p-4 mb-4">
+
+                <h4 class="mb-3">
+
+                    ➕ Add Attendance
+
+                </h4>
+
+                <form method="POST">
+
+                    <div class="row">
+
+                        <div class="col-md-4">
+
+                            <input
+                                type="text"
+                                name="subject"
+                                class="form-control"
+                                placeholder="Subject"
+                                required>
+
+                        </div>
+
+                        <div class="col-md-3">
+
+                            <input
+                                type="date"
+                                name="date"
+                                class="form-control"
+                                required>
+
+                        </div>
+
+                        <div class="col-md-3">
+
+                            <select
+                                name="status"
+                                class="form-select">
+
+                                <option value="Present">
+
+                                    Present
+
+                                </option>
+
+                                <option value="Absent">
+
+                                    Absent
+
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="col-md-2">
+
+                            <button class="btn btn-success w-100">
+
+                                Add
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+            <!-- Search -->
+
+            <div class="card shadow p-3 mb-4">
+
+                <form method="GET">
+
+                    <div class="row">
+
+                        <div class="col-md-10">
+
+                            <input
+                                type="text"
+                                name="search"
+                                class="form-control"
+                                placeholder="Search Subject..."
+                                value="{{ request.args.get('search','') }}">
+
+                        </div>
+
+                        <div class="col-md-2">
+
+                            <button class="btn btn-primary w-100">
+
+                                🔍 Search
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+            <!-- Statistics -->
+
+            <div class="row mb-4">
+
+                <div class="col-md-6">
+
+                    <div class="card shadow text-center p-3">
+
+                        <h5>Total Records</h5>
+
+                        <h2>{{ total }}</h2>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <div class="card shadow text-center p-3">
+
+                        <h5>Attendance Percentage</h5>
+
+                        <h2>{{ percentage }}%</h2>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Attendance Table -->
+
+            <div class="card shadow p-3">
+
+                <table class="table table-hover">
+
+                    <thead class="table-primary">
+
+                        <tr>
+
+                            <th>Subject</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th width="180">Actions</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    {% if attendance %}
+
+                        {% for record in attendance %}
+
+                        <tr>
+
+                            <td>
+
+                                <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:{{ subject_colors.get(record.subject, '#999') }}; margin-right:6px;"></span>{{ record.subject }}
+
+                            </td>
+
+                            <td>
+
+                                {{ record.date }}
+
+                            </td>
+
+                            <td>
+
+                                {% if record.status == "Present" %}
+
+                                    <span class="badge bg-success">
+
+                                        Present
+
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-danger">
+
+                                        Absent
+
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                <a
+                                    href="/attendance/edit/{{ loop.index0 }}"
+                                    class="btn btn-warning btn-sm">
+
+                                    ✏ Edit
+
+                                </a>
+
+                                <a
+                                    href="/attendance/delete/{{ loop.index0 }}"
+                                    class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Delete this record?')">
+
+                                    🗑 Delete
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <tr>
+
+                            <td colspan="4" class="text-center">
+
+                                📭 No Attendance Records Found
+
+                            </td>
+
+                        </tr>
+
+                    {% endif %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

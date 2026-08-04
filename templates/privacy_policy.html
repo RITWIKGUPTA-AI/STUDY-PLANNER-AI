@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Privacy Policy{% endblock %}
+{% block content %}
+<div class="container mt-5" style="max-width:760px;">
+    <h2>Privacy Policy</h2>
+    <p class="text-muted">Last updated: {{ current_year }}</p>
+
+    <p><strong>⚠️ Template — replace the bracketed details below with your
+    real information before publishing.</strong> This is a starting point,
+    not legal advice; consider having a lawyer review it before launch.</p>
+
+    <h5 class="mt-4">1. Who we are</h5>
+    <p>Student Study Planner ("we", "us") is operated by [Your Name /
+    Business Name], contactable at [your support email].</p>
+
+    <h5 class="mt-4">2. What we collect</h5>
+    <ul>
+        <li><strong>Account data:</strong> name, username, email, and a
+        securely hashed password (we never store your actual password).</li>
+        <li><strong>Content you create:</strong> tasks, notes, goals,
+        planner entries, attendance, timetable, and similar study data you
+        enter into the app.</li>
+        <li><strong>AI feature inputs:</strong> questions, topics, and
+        uploaded images/PDFs you submit to AI features are sent to our AI
+        provider (Groq) to generate a response.</li>
+    </ul>
+
+    <h5 class="mt-4">3. How we use it</h5>
+    <p>To provide the app's features, respond to AI queries, send
+    password-reset emails, and improve the service. We do not sell your
+    data.</p>
+
+    <h5 class="mt-4">4. Third parties we share data with</h5>
+    <ul>
+        <li><strong>Groq</strong> — processes text/image inputs to AI
+        features to generate responses.</li>
+        <li><strong>Pollinations.ai</strong> — generates illustrative images
+        for the AI Visual Explainer feature; the concept you type is sent
+        to their service to create the image.</li>
+    </ul>
+
+    <h5 class="mt-4">5. Data retention & deletion</h5>
+    <p>Your data is retained while your account is active. You can permanently
+    delete your account and all associated data yourself, at any time, from
+    <a href="{{ url_for('settings.settings') }}">Settings → Danger Zone → Delete My Account</a>
+    — no need to email us. Deletion is immediate and cannot be undone.</p>
+
+    <h5 class="mt-4">6. Security</h5>
+    <p>Passwords are stored using a salted one-way hash (scrypt) — we never
+    store or have access to your actual password. Session cookies are
+    HttpOnly and restricted to same-site requests. File uploads used by AI
+    features (images/PDFs) are deleted from our servers immediately after
+    processing.</p>
+
+    <h5 class="mt-4">7. Children's privacy</h5>
+    <p>This app is intended for students and may be used by minors under
+    adult/guardian awareness. We do not knowingly collect more personal
+    information than needed to provide the study-planner and AI-tutoring
+    features described above, and we do not use student data for
+    advertising or sell it to third parties.</p>
+
+    <h5 class="mt-4">8. Data safety summary</h5>
+    <ul>
+        <li><strong>Collected:</strong> account info, app-usage content you
+        create, and AI feature inputs (see Section 2).</li>
+        <li><strong>Shared with:</strong> Groq (AI processing) and
+        Pollinations.ai (AI Visual Explainer only) — see Section 4.</li>
+        <li><strong>Encrypted in transit:</strong> yes, over HTTPS.</li>
+        <li><strong>You can request deletion:</strong> yes, in-app and
+        immediately (Section 5).</li>
+        <li><strong>Sold to third parties / used for ads:</strong> no.</li>
+    </ul>
+
+    <h5 class="mt-4">9. Contact</h5>
+    <p>Questions about this policy: [your support email].</p>
+</div>
+{% endblock %}

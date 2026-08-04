@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}
+Edit Attendance
+{% endblock %}
+
+{% block content %}
+
+<div class="wrapper">
+
+    <!-- Sidebar -->
+
+    <div class="sidebar">
+
+        <h3 class="text-center">🎓 Study Planner</h3>
+
+        <hr>
+
+        <a href="/dashboard">🏠 Dashboard</a>
+        <a href="/subjects">📚 Subjects</a>
+        <a href="/tasks">✅ Tasks</a>
+        <a href="/planner">📖 Study Planner</a>
+        <a href="/notes">📝 Notes</a>
+        <a href="/goals">🎯 Goals</a>
+        <a href="/attendance">📊 Attendance</a>
+        <a href="/analytics">📈 Analytics</a>
+
+        <hr>
+
+        <a href="/logout">🚪 Logout</a>
+
+    </div>
+
+    <!-- Main Content -->
+
+    <div class="content">
+
+        <div class="topbar d-flex justify-content-between align-items-center">
+
+            <h2>✏ Edit Attendance</h2>
+
+            <a href="/attendance" class="btn btn-secondary">
+
+                ← Back
+
+            </a>
+
+        </div>
+
+        <div class="container-fluid mt-4">
+
+            <div class="card shadow p-4">
+
+                <form method="POST">
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+
+                            Subject
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="subject"
+                            class="form-control"
+                            value="{{ record.subject }}"
+                            required>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+
+                            Date
+
+                        </label>
+
+                        <input
+                            type="date"
+                            name="date"
+                            class="form-control"
+                            value="{{ record.date }}"
+                            required>
+
+                    </div>
+
+                    <div class="mb-4">
+
+                        <label class="form-label">
+
+                            Status
+
+                        </label>
+
+                        <select
+                            name="status"
+                            class="form-select">
+
+                            <option
+                                value="Present"
+                                {% if record.status=="Present" %}selected{% endif %}>
+
+                                Present
+
+                            </option>
+
+                            <option
+                                value="Absent"
+                                {% if record.status=="Absent" %}selected{% endif %}>
+
+                                Absent
+
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <button class="btn btn-success">
+
+                        💾 Save Changes
+
+                    </button>
+
+                    <a
+                        href="/attendance"
+                        class="btn btn-secondary">
+
+                        Cancel
+
+                    </a>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

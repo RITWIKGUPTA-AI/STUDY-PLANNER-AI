@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+{% block title %}
+Edit Goal
+{% endblock %}
+
+{% block content %}
+
+<div class="wrapper">
+
+    <!-- Sidebar -->
+
+    <div class="sidebar">
+
+        <h3 class="text-center">🎓 Study Planner</h3>
+
+        <hr>
+
+        <a href="/dashboard">🏠 Dashboard</a>
+        <a href="/subjects">📚 Subjects</a>
+        <a href="/tasks">✅ Tasks</a>
+        <a href="/planner">📖 Study Planner</a>
+        <a href="/notes">📝 Notes</a>
+        <a href="/goals">🎯 Goals</a>
+        <a href="/attendance">📊 Attendance</a>
+        <a href="/analytics">📈 Analytics</a>
+
+        <hr>
+
+        <a href="/logout">🚪 Logout</a>
+
+    </div>
+
+    <!-- Main Content -->
+
+    <div class="content">
+
+        <div class="topbar d-flex justify-content-between align-items-center">
+
+            <h2>✏ Edit Goal</h2>
+
+            <a href="/goals" class="btn btn-secondary">
+
+                ← Back
+
+            </a>
+
+        </div>
+
+        <div class="container-fluid mt-4">
+
+            <div class="card shadow p-4">
+
+                <form method="POST">
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+
+                            Goal Title
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="title"
+                            class="form-control"
+                            value="{{ goal.title }}"
+                            required>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+
+                            Target Date
+
+                        </label>
+
+                        <input
+                            type="date"
+                            name="target_date"
+                            class="form-control"
+                            value="{{ goal.target_date }}"
+                            required>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+
+                            Progress (%)
+
+                        </label>
+
+                        <input
+                            type="number"
+                            name="progress"
+                            class="form-control"
+                            min="0"
+                            max="100"
+                            value="{{ goal.progress }}"
+                            required>
+
+                    </div>
+
+                    <div class="mb-4">
+
+                        <label class="form-label">
+
+                            Status
+
+                        </label>
+
+                        <select
+                            name="status"
+                            class="form-select">
+
+                            <option
+                                value="Pending"
+                                {% if goal.status=="Pending" %}selected{% endif %}>
+
+                                Pending
+
+                            </option>
+
+                            <option
+                                value="Completed"
+                                {% if goal.status=="Completed" %}selected{% endif %}>
+
+                                Completed
+
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <button class="btn btn-success">
+
+                        💾 Save Changes
+
+                    </button>
+
+                    <a
+                        href="/goals"
+                        class="btn btn-secondary">
+
+                        Cancel
+
+                    </a>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

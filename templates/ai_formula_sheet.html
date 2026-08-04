@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}AI Formula Sheet{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+<div class="card shadow-lg p-4">
+
+<h2 class="text-center text-primary">
+
+📘 AI Formula Sheet Generator
+
+</h2>
+
+<hr>
+
+<form method="POST">
+
+    <div class="mb-3">
+        <label class="form-label">Target Exam <span class="text-muted small">(optional — tailors the AI's answer)</span></label>
+        <select name="exam" class="form-select">
+            <option value="">General / Not exam-specific</option>
+            <option>JEE</option>
+            <option>NEET</option>
+            <option>UPSC</option>
+            <option>GATE</option>
+            <option>CAT</option>
+            <option>CUET</option>
+            <option>SSC</option>
+            <option>Banking</option>
+        </select>
+    </div>
+
+
+<div class="mb-3">
+
+<label>Subject</label>
+
+<select name="subject" class="form-select">
+
+<option>Physics</option>
+
+<option>Chemistry</option>
+
+<option>Mathematics</option>
+
+<option>Biology</option>
+
+</select>
+
+</div>
+
+<div class="mb-3">
+
+<label>Chapter</label>
+
+<input
+type="text"
+name="chapter"
+class="form-control"
+placeholder="Example: Electrostatics"
+required>
+
+</div>
+
+<button class="btn btn-primary w-100">
+
+📘 Generate Formula Sheet
+
+</button>
+
+</form>
+
+{% if result %}
+
+<hr>
+
+<div class="alert alert-success">
+
+<pre style="white-space:pre-wrap;">{{ result }}</pre>
+
+</div>
+
+{% endif %}
+
+</div>
+
+</div>
+
+{% include "partials/visual_aid.html" %}
+
+{% endblock %}

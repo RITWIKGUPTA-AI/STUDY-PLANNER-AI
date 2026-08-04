@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block title %}AI Competitive Exam Hub{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="position-relative overflow-hidden mb-4" style="border-radius:var(--radius-lg); height:180px; box-shadow:var(--shadow-md);">
+        <img src="https://image.pollinations.ai/prompt/futuristic%20exam%20preparation%2C%20glowing%20trophy%2C%20digital%20holographic%20charts%20and%20graphs%2C%20students%20competing%2C%20sci-fi%20blue%20and%20gold%2C%20wide%20banner%20digital%20art?width=1400&height=350&nologo=true"
+             alt="Competitive exam preparation banner"
+             loading="lazy"
+             style="width:100%; height:100%; object-fit:cover; filter:brightness(0.5);">
+        <div class="position-absolute top-50 start-0 translate-middle-y ps-4 ps-md-5 text-white">
+            <h3 class="fw-bold mb-0" style="font-family:var(--font-display);">🏆 AI Competitive Exam Hub</h3>
+            <p class="mb-0 d-none d-md-block">JEE • NEET • UPSC • GATE • CAT • CUET • SSC • Banking</p>
+        </div>
+    </div>
+
+    <div class="card shadow-lg p-4">
+
+        <form method="POST">
+
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Select Competitive Exam
+                </label>
+
+                <select
+                    name="exam"
+                    class="form-select"
+                    required>
+
+                    <option value="">Choose Exam</option>
+
+                    <option>JEE</option>
+
+                    <option>NEET</option>
+
+                    <option>UPSC</option>
+
+                    <option>GATE</option>
+
+                    <option>CAT</option>
+
+                    <option>CUET</option>
+
+                    <option>SSC</option>
+
+                    <option>Banking</option>
+
+                </select>
+
+            </div>
+
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Current Class / Year
+                </label>
+
+                <input
+                    type="text"
+                    name="level"
+                    class="form-control"
+                    placeholder="Example: Class 12 / Graduate"
+                    required>
+
+            </div>
+
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Daily Study Hours
+                </label>
+
+                <input
+                    type="number"
+                    name="hours"
+                    class="form-control"
+                    required>
+
+            </div>
+
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Weak Subjects
+                </label>
+
+                <textarea
+                    class="form-control"
+                    rows="4"
+                    name="weak_subjects"
+                    placeholder="Physics, Organic Chemistry..."
+                ></textarea>
+
+            </div>
+
+            <button class="btn btn-success btn-lg w-100">
+                🚀 Generate Complete AI Roadmap
+
+            </button>
+
+        </form>
+
+        {% if roadmap %}
+
+        <hr>
+
+        <div class="alert alert-success">
+
+            <h4>📚 AI Exam Strategy</h4>
+
+            <div class="bg-light p-3 rounded">
+
+            <pre style="white-space:pre-wrap;
+            font-size:15px;
+            line-height:1.8;">
+
+            {{ roadmap }}
+
+            </pre>
+
+            </div> 
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% include "partials/visual_aid.html" %}
+
+{% endblock %}

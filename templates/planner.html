@@ -1,0 +1,282 @@
+{% extends "base.html" %}
+
+{% block title %}
+Study Planner
+{% endblock %}
+
+{% block content %}
+
+<div class="wrapper">
+
+    <!-- Sidebar -->
+
+    <div class="sidebar">
+
+        <h3 class="text-center">🎓 Study Planner</h3>
+
+        <hr>
+
+        <a href="/dashboard">🏠 Dashboard</a>
+        <a href="/subjects">📚 Subjects</a>
+        <a href="/tasks">✅ Tasks</a>
+        <a href="/planner">📖 Study Planner</a>
+        <a href="/notes">📝 Notes</a>
+        <a href="/goals">🎯 Goals</a>
+        <a href="/attendance">📊 Attendance</a>
+        <a href="/analytics">📈 Analytics</a>
+        <a href="/logout">🚪 Logout</a>
+
+    </div>
+
+    <!-- Main Content -->
+
+    <div class="content">
+
+        <div class="topbar d-flex justify-content-between align-items-center">
+
+            <h2>📖 Study Planner</h2>
+
+            <a href="/dashboard" class="btn btn-primary">
+
+                Dashboard
+
+            </a>
+
+        </div>
+
+        <div class="container-fluid mt-4">
+
+            <!-- Add Plan -->
+
+            <div class="card shadow p-4 mb-4">
+
+                <h4 class="mb-3">
+
+                    ➕ Add Study Plan
+
+                </h4>
+
+                <form method="POST">
+
+                    <div class="row">
+
+                        <div class="col-md-3">
+
+                            <input
+                                class="form-control"
+                                name="subject"
+                                placeholder="Subject"
+                                required>
+
+                        </div>
+
+                        <div class="col-md-3">
+
+                            <input
+                                class="form-control"
+                                name="topic"
+                                placeholder="Topic"
+                                required>
+
+                        </div>
+
+                        <div class="col-md-2">
+
+                            <input
+                                class="form-control"
+                                type="number"
+                                name="duration"
+                                placeholder="Minutes"
+                                required>
+
+                        </div>
+
+                        <div class="col-md-2">
+
+                            <input
+                                class="form-control"
+                                type="date"
+                                name="date"
+                                required>
+
+                        </div>
+
+                        <div class="col-md-2">
+
+                            <button class="btn btn-success w-100">
+
+                                Add Plan
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+            <!-- Search -->
+
+            <div class="card shadow p-3 mb-4">
+
+                <form method="GET">
+
+                    <div class="row">
+
+                        <div class="col-md-10">
+
+                            <input
+                                class="form-control"
+                                name="search"
+                                placeholder="Search by subject or topic"
+                                value="{{ request.args.get('search','') }}">
+
+                        </div>
+
+                        <div class="col-md-2">
+
+                            <button class="btn btn-primary w-100">
+
+                                🔍 Search
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+            <!-- Total -->
+
+            <div class="alert alert-info">
+
+                <strong>Total Plans :</strong>
+
+                {{ total }}
+
+            </div>
+
+            <!-- Plans Table -->
+
+            <div class="card shadow p-3">
+
+                <table class="table table-hover">
+
+                    <thead class="table-primary">
+
+                        <tr>
+
+                            <th>Subject</th>
+                            <th>Topic</th>
+                            <th>Duration</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th width="260">Actions</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    {% if plans %}
+
+                        {% for plan in plans %}
+
+                        <tr>
+
+                            <td><span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:{{ subject_colors.get(plan.subject, '#999') }}; margin-right:6px;"></span>{{ plan.subject }}</td>
+
+                            <td>{{ plan.topic }}</td>
+
+                            <td>{{ plan.duration }} min</td>
+
+                            <td>{{ plan.date }}</td>
+
+                            <td>
+
+                                {% if plan.status == "Completed" %}
+
+                                    <span class="badge bg-success">
+
+                                        Completed
+
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-warning text-dark">
+
+                                        Pending
+
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                <a
+                                    href="/planner/complete/{{ loop.index0 }}"
+                                    class="btn btn-success btn-sm">
+
+                                    ✓ Complete
+
+                                </a>
+
+                                <a
+                                    href="/planner/edit/{{ loop.index0 }}"
+                                    class="btn btn-warning btn-sm">
+
+                                    ✏ Edit
+
+                                </a>
+
+                                <a
+                                    href="/planner/delete/{{ loop.index0 }}"
+                                    class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Delete this plan?')">
+
+                                    🗑 Delete
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <tr>
+
+                            <td colspan="6" class="text-center">
+
+                                📭 No Study Plans Found
+
+                            </td>
+
+                        </tr>
+
+                    {% endif %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

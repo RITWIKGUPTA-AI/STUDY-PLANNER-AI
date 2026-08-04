@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}
+AI Revision Planner
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow-lg">
+
+        <div class="card-header bg-primary text-white">
+
+            <h2 class="mb-0">
+                📅 AI Revision Planner
+            </h2>
+
+            <small>
+                Generate a personalized revision timetable using AI.
+            </small>
+
+        </div>
+
+        <div class="card-body">
+
+            <form method="POST">
+
+    <div class="mb-3">
+        <label class="form-label">Target Exam <span class="text-muted small">(optional — tailors the AI's answer)</span></label>
+        <select name="exam" class="form-select">
+            <option value="">General / Not exam-specific</option>
+            <option>JEE</option>
+            <option>NEET</option>
+            <option>UPSC</option>
+            <option>GATE</option>
+            <option>CAT</option>
+            <option>CUET</option>
+            <option>SSC</option>
+            <option>Banking</option>
+        </select>
+    </div>
+
+
+                <div class="mb-3">
+                    <label class="form-label">
+                        Subjects
+                    </label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        name="subjects"
+                        placeholder="Physics, Chemistry, Mathematics"
+                        required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">
+                        Exam Date
+                    </label>
+
+                    <input
+                        type="date"
+                        class="form-control"
+                        name="exam_date"
+                        required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">
+                        Weak Topics
+                    </label>
+
+                    <textarea
+                        class="form-control"
+                        rows="4"
+                        name="weak_topics"
+                        placeholder="Organic Chemistry, Rotation, Probability"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">
+                        Study Hours Per Day
+                    </label>
+
+                    <input
+                        type="number"
+                        class="form-control"
+                        name="study_hours"
+                        min="1"
+                        max="18"
+                        required>
+                </div>
+
+                <button
+                    class="btn btn-primary">
+
+                    🚀 Generate Revision Plan
+
+                </button>
+
+            </form>
+
+            {% if plan %}
+
+            <hr>
+
+            <h3 class="mb-3">
+                📋 Your AI Revision Plan
+            </h3>
+
+            <div class="alert alert-light border">
+
+                <pre style="white-space:pre-wrap;">{{ plan }}</pre>
+
+            </div>
+
+            <button
+                class="btn btn-success"
+                onclick="window.print()">
+
+                🖨 Print Plan
+
+            </button>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% include "partials/visual_aid.html" %}
+
+{% endblock %}

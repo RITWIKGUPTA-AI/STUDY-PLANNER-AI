@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en" class="{{ 'dark' if session.get('theme') == 'dark' else '' }}">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}Student Study Planner{% endblock %}</title>
+
+    <!-- Bootstrap CSS (vendored locally, no CDN dependency) -->
+    <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+
+    <!-- Bootstrap Icons (vendored locally) -->
+    <link href="{{ url_for('static', filename='vendor/bootstrap-icons/font/bootstrap-icons.css') }}" rel="stylesheet">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- PWA -->
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <meta name="theme-color" content="#2F4B7C">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='icons/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ url_for('static', filename='icons/icon-192.png') }}">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="StudyPlanner">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v={{ app_version }}">
+
+    {% block extra_css %}{% endblock %}
+
+</head>
+
+<body>
+
+<!-- ===============================
+     Loading Spinner
+================================ -->
+
+<div id="loader">
+
+    <div class="spinner-border text-primary" role="status">
+
+        <span class="visually-hidden">
+            Loading...
+        </span>
+
+    </div>
+
+</div>
+
+<!-- ===============================
+     Mobile Menu Button
+================================ -->
+
+<button
+    id="menuBtn"
+    class="btn btn-primary d-md-none position-fixed"
+    style="top:15px;left:15px;z-index:2000;">
+
+    <i class="bi bi-list"></i>
+
+</button>
+
+<!-- ===============================
+     Flash Messages
+================================ -->
+
+<div class="container mt-3">
+
+{% with messages=get_flashed_messages(with_categories=true) %}
+
+{% if messages %}
+
+{% for category,message in messages %}
+
+<div class="alert alert-{{ category }} alert-dismissible fade show shadow">
+
+    {{ message }}
+
+    <button
+        class="btn-close"
+        data-bs-dismiss="alert">
+
+    </button>
+
+</div>
+
+{% endfor %}
+
+{% endif %}
+
+{% endwith %}
+
+</div>
+
+<!-- ===============================
+     Page Content
+================================ -->
+
+{% block content %}
+
+{% endblock %}
+
+{% if session.get('username') %}
+<!-- ===============================
+     Mobile Bottom Navigation
+================================ -->
+<nav class="bottom-nav">
+    <a href="{{ url_for('dashboard') }}" class="bottom-nav-item {{ 'active' if request.path == url_for('dashboard') }}">
+        <i class="bi bi-house-door-fill"></i>
+        <span>Home</span>
+    </a>
+    <a href="{{ url_for('planner.planner') }}" class="bottom-nav-item {{ 'active' if request.path == url_for('planner.planner') }}">
+        <i class="bi bi-calendar-check-fill"></i>
+        <span>Planner</span>
+    </a>
+    <a href="{{ url_for('dashboard') }}#ai-tools" class="bottom-nav-item">
+        <i class="bi bi-stars"></i>
+        <span>AI Tools</span>
+    </a>
+    <a href="{{ url_for('ai_mock_test') }}" class="bottom-nav-item {{ 'active' if request.path == url_for('ai_mock_test') }}">
+        <i class="bi bi-pencil-square"></i>
+        <span>Mock Test</span>
+    </a>
+    <a href="{{ url_for('profile.profile') }}" class="bottom-nav-item {{ 'active' if request.path == url_for('profile.profile') }}">
+        <i class="bi bi-person-circle"></i>
+        <span>Profile</span>
+    </a>
+</nav>
+{% endif %}
+
+<!-- ===============================
+     Footer
+================================ -->
+
+<footer class="text-center text-muted small py-4 mt-4" style="border-top:1px solid var(--color-border);">
+    <a href="{{ url_for('privacy_policy') }}" class="text-muted me-3">Privacy Policy</a>
+    <a href="{{ url_for('terms') }}" class="text-muted me-3">Terms of Service</a>
+    <a href="{{ url_for('refund_policy') }}" class="text-muted me-3">Refund Policy</a>
+    {% if session.get('username') %}
+    <a href="{{ url_for('report_issue') }}" class="text-muted">Report an Issue</a>
+    {% endif %}
+    <div class="mt-2">© {{ current_year if current_year else '' }} Student Study Planner</div>
+</footer>
+
+<!-- ===============================
+     Scroll To Top
+================================ -->
+
+<button
+    id="topBtn"
+    class="btn btn-primary rounded-circle">
+
+    ↑
+
+</button>
+
+<!-- Bootstrap (vendored locally) -->
+
+<script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+<!-- ChartJS (vendored locally) -->
+
+<script src="{{ url_for('static', filename='vendor/chartjs/chart.js') }}"></script>
+
+<!-- Mermaid.js (vendored locally, for AI-generated concept diagrams across all AI features) -->
+
+<script src="{{ url_for('static', filename='vendor/mermaid/mermaid.min.js') }}"></script>
+<script>
+    if (window.mermaid) {
+        mermaid.initialize({
+            startOnLoad: false,
+            theme: "default",
+            suppressErrorRendering: true
+        });
+
+        async function renderAllDiagrams() {
+            const nodes = document.querySelectorAll(".mermaid:not([data-processed])");
+
+            for (const node of nodes) {
+                const originalCode = node.textContent;
+                try {
+                    const { svg } = await mermaid.render("m" + Math.random().toString(36).slice(2), originalCode);
+                    node.innerHTML = svg;
+                    node.setAttribute("data-processed", "true");
+                } catch (err) {
+                    // Diagram couldn't be rendered — hide it instead of
+                    // showing Mermaid's raw "Syntax error in text" output.
+                    const card = node.closest(".card");
+                    if (card) {
+                        card.style.display = "none";
+                    } else {
+                        node.style.display = "none";
+                    }
+                }
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", renderAllDiagrams);
+    }
+</script>
+
+<!-- Custom JS -->
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+{% block extra_js %}
+
+{% endblock %}
+
+<!-- ===============================
+     Auto Hide Alerts
+================================ -->
+
+<script>
+
+setTimeout(function(){
+
+document.querySelectorAll(".alert.alert-dismissible").forEach(function(alert){
+
+bootstrap.Alert.getOrCreateInstance(alert).close();
+
+});
+
+},3000);
+
+</script>
+
+<!-- ===============================
+     PWA Service Worker
+================================ -->
+
+<script>
+
+if ("serviceWorker" in navigator) {
+
+    window.addEventListener("load", function () {
+
+        navigator.serviceWorker.register("/static/service-worker.js")
+            .catch(function (err) {
+                console.log("Service worker registration failed:", err);
+            });
+
+    });
+
+}
+
+</script>
+
+{% if session.get('username') %}
+<!-- ===============================
+     Reminder Notifications
+================================ -->
+
+<script>
+
+(function () {
+
+    if (!("Notification" in window)) return;
+
+    if (Notification.permission === "default") {
+        Notification.requestPermission();
+    }
+
+    function notifiedKey(reminder) {
+        return "reminder-notified:" + reminder.title + ":" + reminder.date + ":" + reminder.time;
+    }
+
+    async function checkReminders() {
+
+        if (Notification.permission !== "granted") return;
+
+        try {
+            const resp = await fetch("/api/todays-reminders");
+            if (!resp.ok) return;
+
+            const data = await resp.json();
+            const now = new Date();
+            const nowMinutes = now.getHours() * 60 + now.getMinutes();
+
+            (data.reminders || []).forEach(function (reminder) {
+
+                if (!reminder.time) return;
+
+                const parts = reminder.time.split(":").map(Number);
+                const h = parts[0];
+                const m = parts[1];
+                if (isNaN(h) || isNaN(m)) return;
+
+                const reminderMinutes = h * 60 + m;
+
+                // Only notify once we've reached the reminder's time (and
+                // not more than 30 minutes late, so old ones don't spam on
+                // a page load hours afterward), and only once per reminder.
+                const key = notifiedKey(reminder);
+
+                if (
+                    nowMinutes >= reminderMinutes &&
+                    nowMinutes - reminderMinutes <= 30 &&
+                    !localStorage.getItem(key)
+                ) {
+                    new Notification("📚 Study Reminder", {
+                        body: reminder.title,
+                        icon: "/static/icons/icon-192.png",
+                    });
+                    localStorage.setItem(key, "1");
+                }
+            });
+
+        } catch (err) {
+            // Silently ignore — notifications are a nice-to-have, not
+            // something that should ever break the page.
+        }
+    }
+
+    checkReminders();
+    setInterval(checkReminders, 60000);
+
+})();
+
+</script>
+{% endif %}
+
+<!-- ===============================
+     Loading Screen
+================================ -->
+
+<script>
+
+window.onload=function(){
+
+document.getElementById("loader").style.display="none";
+
+};
+
+</script>
+
+<!-- ===============================
+     Scroll To Top
+================================ -->
+
+<script>
+
+const topBtn=document.getElementById("topBtn");
+
+window.onscroll=function(){
+
+if(document.body.scrollTop>200||
+
+document.documentElement.scrollTop>200){
+
+topBtn.style.display="block";
+
+}
+
+else{
+
+topBtn.style.display="none";
+
+}
+
+};
+
+topBtn.onclick=function(){
+
+window.scrollTo({
+
+top:0,
+
+behavior:"smooth"
+
+});
+
+};
+
+</script>
+
+<!-- ===============================
+     Sidebar Toggle
+================================ -->
+
+<script>
+
+const menu=document.getElementById("menuBtn");
+
+const sidebar=document.getElementById("sidebar");
+
+if(menu && sidebar){
+
+menu.onclick=function(){
+
+sidebar.classList.toggle("active");
+
+};
+
+}
+
+</script>
+
+</body>
+
+</html>

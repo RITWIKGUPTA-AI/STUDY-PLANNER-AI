@@ -1,0 +1,952 @@
+{% extends "base.html" %}
+
+{% block title %}
+Analytics Dashboard
+{% endblock %}
+
+{% block content %}
+
+<div class="wrapper">
+
+    <!-- Sidebar -->
+
+    <div class="sidebar">
+
+        <h3 class="text-center">
+
+            🎓 Study Planner
+
+        </h3>
+
+        <hr>
+
+        <a href="/dashboard">🏠 Dashboard</a>
+        <a href="/subjects">📚 Subjects</a>
+        <a href="/tasks">✅ Tasks</a>
+        <a href="/planner">📖 Planner</a>
+        <a href="/notes">📝 Notes</a>
+        <a href="/goals">🎯 Goals</a>
+        <a href="/attendance">📊 Attendance</a>
+        <a href="/analytics" class="active">📈 Analytics</a>
+        <a href="/settings">⚙ Settings</a>
+        <a href="/logout">🚪 Logout</a>
+
+    </div>
+
+    <!-- Content -->
+
+    <div class="content">
+
+        <div class="topbar d-flex justify-content-between align-items-center">
+
+            <div>
+
+                <h2>
+
+                    📈 Analytics Dashboard
+
+                </h2>
+
+                <p class="text-muted mb-0">
+
+                    Monitor your overall study performance.
+
+                </p>
+
+            </div>
+
+            <a
+
+                href="/dashboard"
+
+                class="btn btn-primary">
+
+                Dashboard
+
+            </a>
+
+        </div>
+
+        <div class="container-fluid mt-4">
+
+            <!-- Statistics Cards -->
+
+            <div class="row g-4">
+
+                <div class="col-lg-3 col-md-6">
+
+                    <div class="dashboard-card card shadow">
+
+                        <div class="card-body text-center">
+
+                            <h6>
+
+                                📚 Subjects
+
+                            </h6>
+
+                            <h2>
+
+                                {{ subject_count }}
+
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+
+                    <div class="dashboard-card card shadow">
+
+                        <div class="card-body text-center">
+
+                            <h6>
+
+                                ✅ Tasks
+
+                            </h6>
+
+                            <h2>
+
+                                {{ task_count }}
+
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+
+                    <div class="dashboard-card card shadow">
+
+                        <div class="card-body text-center">
+
+                            <h6>
+
+                                📝 Notes
+
+                            </h6>
+
+                            <h2>
+
+                                {{ note_count }}
+
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+
+                    <div class="dashboard-card card shadow">
+
+                        <div class="card-body text-center">
+
+                            <h6>
+
+                                🎯 Goals
+
+                            </h6>
+
+                            <h2>
+
+                                {{ goal_count }}
+
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <br>
+
+            <div class="row g-4">
+
+                <div class="col-lg-3 col-md-6">
+
+                    <div class="dashboard-card card shadow">
+
+                        <div class="card-body text-center">
+
+                            <h6>
+
+                                📖 Study Plans
+
+                            </h6>
+
+                            <h2>
+
+                                {{ planner_count }}
+
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+
+                    <div class="dashboard-card card shadow">
+
+                        <div class="card-body text-center">
+
+                            <h6>
+
+                                🔔 Reminders
+
+                            </h6>
+
+                            <h2>
+
+                                {{ reminder_count }}
+
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+
+                    <div class="dashboard-card card shadow">
+
+                        <div class="card-body text-center">
+
+                            <h6>
+
+                                📅 Timetable
+
+                            </h6>
+
+                            <h2>
+
+                                {{ timetable_count }}
+
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+
+                    <div class="dashboard-card card shadow">
+
+                        <div class="card-body text-center">
+
+                            <h6>
+
+                                📊 Attendance
+
+                            </h6>
+
+                            <h2>
+
+                                {{ attendance_count }}
+
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <hr class="my-4">
+
+            <!-- Progress -->
+
+            <div class="row">
+
+                <div class="col-lg-4 mb-4">
+
+                    <div class="card shadow">
+
+                        <div class="card-header">
+
+                            ✅ Task Progress
+
+                        </div>
+
+                        <div class="card-body">
+
+                            <div class="progress" style="height:25px;">
+
+                                <div
+
+                                    class="progress-bar bg-success"
+
+                                    style="width: {{ task_progress }}%;">
+
+                                    {{ task_progress }}%
+
+                                </div>
+
+                            </div>
+
+                            <br>
+
+                            <p>
+
+                                Completed :
+                                <strong>
+
+                                    {{ completed_tasks }}
+
+                                </strong>
+
+                            </p>
+
+                            <p>
+
+                                Pending :
+                                <strong>
+
+                                    {{ pending_tasks }}
+
+                                </strong>
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-4 mb-4">
+
+                    <div class="card shadow">
+
+                        <div class="card-header">
+
+                            🎯 Goal Progress
+
+                        </div>
+
+                        <div class="card-body">
+
+                            <div class="progress" style="height:25px;">
+
+                                <div
+
+                                    class="progress-bar bg-primary"
+
+                                    style="width: {{ goal_progress }}%;">
+
+                                    {{ goal_progress }}%
+
+                                </div>
+
+                            </div>
+
+                            <br>
+
+                            <p>
+
+                                Completed :
+                                <strong>
+
+                                    {{ completed_goals }}
+
+                                </strong>
+
+                            </p>
+
+                            <p>
+
+                                Pending :
+                                <strong>
+
+                                    {{ pending_goals }}
+
+                                </strong>
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-4 mb-4">
+
+                    <div class="card shadow">
+
+                        <div class="card-header">
+
+                            📊 Attendance
+
+                        </div>
+
+                        <div class="card-body">
+
+                            <div class="progress" style="height:25px;">
+
+                                <div
+
+                                    class="progress-bar bg-warning"
+
+                                    style="width: {{ attendance_percentage }}%;">
+
+                                    {{ attendance_percentage }}%
+
+                                </div>
+
+                            </div>
+
+                            <br>
+
+                            <p>
+
+                                Present :
+                                <strong>
+
+                                    {{ present }}
+
+                                </strong>
+
+                            </p>
+
+                            <p>
+
+                                Absent :
+                                <strong>
+
+                                    {{ absent }}
+
+                                </strong>
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Study Summary -->
+
+            <div class="card shadow mb-4">
+
+                <div class="card-header">
+
+                    📖 Study Summary
+
+                </div>
+
+                <div class="card-body">
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+
+                            <h5>
+
+                                Total Study Minutes
+
+                            </h5>
+
+                            <h2>
+
+                                {{ total_minutes }}
+
+                            </h2>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <h5>
+
+                                Total Study Hours
+
+                            </h5>
+
+                            <h2>
+
+                                {{ total_hours }}
+
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Charts Start -->
+             <div class="row">
+
+                <div class="col-lg-6 mb-4">
+
+                    <div class="card shadow">
+
+                        <div class="card-header">
+
+                            📊 Weekly Study Hours
+
+                        </div>
+
+                        <div class="card-body">
+
+                            <canvas id="weeklyChart"></canvas>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-6 mb-4">
+
+                    <div class="card shadow">
+
+                        <div class="card-header">
+
+                            📈 Monthly Progress
+
+                        </div>
+
+                        <div class="card-body">
+
+                            <canvas id="monthlyChart"></canvas>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-lg-6 mb-4">
+
+                    <div class="card shadow">
+
+                        <div class="card-header">
+
+                            📚 Subject Distribution
+
+                        </div>
+
+                        <div class="card-body">
+
+                            <canvas id="subjectChart"></canvas>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-6 mb-4">
+
+                    <div class="card shadow">
+
+                        <div class="card-header">
+
+                            🎯 Priority Summary
+
+                        </div>
+
+                        <div class="card-body">
+
+                            <table class="table table-bordered">
+
+                                <tr>
+
+                                    <th>High</th>
+
+                                    <td>{{ high_priority }}</td>
+
+                                </tr>
+
+                                <tr>
+
+                                    <th>Medium</th>
+
+                                    <td>{{ medium_priority }}</td>
+
+                                </tr>
+
+                                <tr>
+
+                                    <th>Low</th>
+
+                                    <td>{{ low_priority }}</td>
+
+                                </tr>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="card shadow mb-4">
+
+                <div class="card-header">
+
+                    📄 Study Insights
+
+                </div>
+
+                <div class="card-body">
+
+                    <ul>
+
+                        <li>
+
+                            Total Subjects :
+                            <strong>{{ subject_count }}</strong>
+
+                        </li>
+
+                        <li>
+
+                            Total Tasks :
+                            <strong>{{ task_count }}</strong>
+
+                        </li>
+
+                        <li>
+
+                            Completed Tasks :
+                            <strong>{{ completed_tasks }}</strong>
+
+                        </li>
+
+                        <li>
+
+                            Goal Completion :
+                            <strong>{{ goal_progress }}%</strong>
+
+                        </li>
+
+                        <li>
+
+                            Attendance :
+                            <strong>{{ attendance_percentage }}%</strong>
+
+                        </li>
+
+                        <li>
+
+                            Total Study Hours :
+                            <strong>{{ total_hours }}</strong>
+
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+            </div>
+
+            </div>
+
+            </div>
+
+            <!-- Chart.js is already loaded once, locally, from base.html -->
+
+
+            <script>
+
+            const weeklyData = {{ weekly_data | tojson }};
+            const weeklyLabels = {{ weekly_labels | tojson }};
+            const monthlyData = {{ monthly_data | tojson }};
+            const monthlyLabels = {{ monthly_labels | tojson }};
+            const subjectLabels = {{ subject_labels | tojson }};
+            const subjectValues = {{ subject_values | tojson }};
+
+            // ===============================
+            // Weekly Study Bar Chart
+            // ===============================
+
+            new Chart(
+
+                document.getElementById("weeklyChart"),
+
+                {
+
+                    type: "bar",
+
+                    data: {
+
+                        labels: weeklyLabels,
+
+                        datasets: [
+
+                            {
+
+                                label: "Study Hours",
+
+                                data: weeklyData,
+
+                                backgroundColor: [
+
+                                    "#0d6efd",
+
+                                    "#198754",
+
+                                    "#ffc107",
+
+                                    "#dc3545",
+
+                                    "#6f42c1",
+
+                                    "#20c997",
+
+                                    "#fd7e14"
+
+                                ],
+
+                                borderWidth:1
+
+                            }
+
+                        ]
+
+                    },
+
+                    options: {
+
+                        responsive:true,
+
+                        plugins:{
+
+                            legend:{
+
+                                display:false
+
+                            }
+
+                        },
+
+                        scales:{
+
+                            y:{
+
+                                beginAtZero:true
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            );
+
+            // ===============================
+            // Monthly Line Chart
+            // ===============================
+
+            new Chart(
+
+                document.getElementById("monthlyChart"),
+
+                {
+
+                    type:"line",
+
+                    data:{
+
+                        labels: monthlyLabels,
+
+                        datasets:[
+
+                            {
+
+                                label:"Study Hours",
+
+                                data:monthlyData,
+
+                                fill:false,
+
+                                borderColor:"#198754",
+
+                                backgroundColor:"#198754",
+
+                                tension:0.4
+
+                            }
+
+                        ]
+
+                    },
+
+                    options:{
+
+                        responsive:true
+
+                    }
+
+                }
+
+            );
+
+            // ===============================
+            // Subject Distribution Pie Chart
+            // ===============================
+
+            new Chart(
+
+                document.getElementById("subjectChart"),
+
+                {
+
+                    type:"pie",
+
+                    data:{
+
+                        labels:subjectLabels,
+
+                        datasets:[
+
+                            {
+
+                                data:subjectValues,
+
+                                backgroundColor:[
+
+                                    "#0d6efd",
+
+                                    "#198754",
+
+                                    "#ffc107",
+
+                                    "#dc3545",
+
+                                    "#6f42c1",
+
+                                    "#20c997",
+
+                                    "#fd7e14",
+
+                                    "#6610f2",
+
+                                    "#0dcaf0",
+
+                                    "#adb5bd"
+
+                                ]
+
+                            }
+
+                        ]
+
+                    },
+
+                    options:{
+
+                        responsive:true
+
+                    }
+
+                }
+
+            );
+
+            // ===============================
+            // Attendance Doughnut Chart
+            // ===============================
+
+            const attendanceCanvas = document.createElement("canvas");
+
+            attendanceCanvas.id="attendanceChart";
+
+            document.querySelector(".content").appendChild(attendanceCanvas);
+
+            new Chart(
+
+                attendanceCanvas,
+
+                {
+
+                    type:"doughnut",
+
+                    data:{
+
+                        labels:[
+
+                            "Present",
+
+                            "Absent"
+
+                        ],
+
+                        datasets:[
+
+                            {
+
+                                data:[
+
+                                    {{ present }},
+
+                                    {{ absent }}
+
+                                ],
+
+                                backgroundColor:[
+
+                                    "#198754",
+
+                                    "#dc3545"
+
+                                ]
+
+                            }
+
+                        ]
+
+                    },
+
+                    options:{
+
+                        responsive:true
+
+                    }
+
+                }
+
+            );
+
+            </script>
+            {% endblock %}

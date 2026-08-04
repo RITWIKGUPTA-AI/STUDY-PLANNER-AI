@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}
+AI Weakness Analyzer
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+<div class="card shadow">
+
+<div class="card-header bg-danger text-white">
+
+<h2>🧠 AI Weakness Analyzer</h2>
+
+</div>
+
+<div class="card-body">
+
+<form method="POST">
+
+    <div class="mb-3">
+        <label class="form-label">Target Exam <span class="text-muted small">(optional — tailors the AI's answer)</span></label>
+        <select name="exam" class="form-select">
+            <option value="">General / Not exam-specific</option>
+            <option>JEE</option>
+            <option>NEET</option>
+            <option>UPSC</option>
+            <option>GATE</option>
+            <option>CAT</option>
+            <option>CUET</option>
+            <option>SSC</option>
+            <option>Banking</option>
+        </select>
+    </div>
+
+
+<div class="mb-3">
+
+<label>Quiz Results</label>
+
+<textarea
+class="form-control"
+rows="3"
+name="quiz"
+placeholder="Physics 80%, Chemistry 60%, Maths 75%"></textarea>
+
+</div>
+
+<div class="mb-3">
+
+<label>Mock Test Results</label>
+
+<textarea
+class="form-control"
+rows="3"
+name="mock"
+placeholder="Mock 1: 150/300"></textarea>
+
+</div>
+
+<div class="mb-3">
+
+<label>Completed Tasks</label>
+
+<textarea
+class="form-control"
+rows="3"
+name="tasks"
+placeholder="Completed Electrostatics, Trigonometry"></textarea>
+
+</div>
+
+<div class="mb-3">
+
+<label>Subjects</label>
+
+<input
+type="text"
+class="form-control"
+name="subjects"
+placeholder="Physics, Chemistry, Mathematics">
+
+</div>
+
+<button
+class="btn btn-danger">
+
+Analyze Performance
+
+</button>
+
+</form>
+
+{% if report %}
+
+<hr>
+
+<h3>Analysis Report</h3>
+
+<div class="alert alert-light">
+
+<pre style="white-space:pre-wrap;">{{ report }}</pre>
+
+</div>
+
+<button
+class="btn btn-success"
+onclick="window.print()">
+
+🖨 Print Report
+
+</button>
+
+{% endif %}
+
+</div>
+
+</div>
+
+</div>
+
+{% include "partials/visual_aid.html" %}
+
+{% endblock %}

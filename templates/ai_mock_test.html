@@ -1,0 +1,655 @@
+{% extends "base.html" %}
+
+{% block title %}
+AI CBT Exam Simulator
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .cbt-exam-card{border:1px solid var(--color-border);border-radius:var(--radius-md);padding:1.1rem 1.25rem;height:100%;transition:box-shadow .15s,transform .15s;background:var(--color-surface);}
+    .cbt-exam-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);}
+    .cbt-exam-card h5{color:var(--color-primary);margin-bottom:.15rem;}
+    .cbt-badge-pill{display:inline-block;font-size:.72rem;padding:.15rem .55rem;border-radius:999px;background:var(--color-bg);color:var(--color-text-muted);margin:.15rem .25rem .15rem 0;border:1px solid var(--color-border);}
+
+    #cbtTimer{font-variant-numeric:tabular-nums;font-weight:700;letter-spacing:.5px;}
+    #cbtTimer.text-danger{animation:cbtPulse 1s ease infinite;}
+    @keyframes cbtPulse{0%,100%{opacity:1;}50%{opacity:.45;}}
+
+    .cbt-question-box{border:1px solid var(--color-border);border-radius:var(--radius-md);background:var(--color-surface);padding:1.25rem;min-height:260px;}
+    .cbt-option{display:block;width:100%;text-align:left;border:1px solid var(--color-border);border-radius:var(--radius-sm);padding:.6rem .9rem;margin-bottom:.55rem;background:var(--color-surface);cursor:pointer;transition:border-color .12s,background .12s;}
+    .cbt-option:hover{border-color:var(--color-primary-light);}
+    .cbt-option.selected{border-color:var(--color-primary);background:rgba(47,75,124,.08);font-weight:600;}
+
+    .cbt-palette-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
+    .cbt-palette-btn{aspect-ratio:1/1;border:none;border-radius:6px;font-size:.78rem;font-weight:700;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative;}
+    .cbt-palette-btn.pstate-not-visited{background:#B9C2CF;color:#3A4557;}
+    .cbt-palette-btn.pstate-not-answered{background:var(--color-danger);}
+    .cbt-palette-btn.pstate-answered{background:var(--color-success);}
+    .cbt-palette-btn.pstate-marked{background:#8E5FD9;}
+    .cbt-palette-btn.pstate-answered-marked{background:#8E5FD9;box-shadow:inset 0 0 0 3px #2E9E6D;}
+    .cbt-palette-btn.current{outline:3px solid var(--color-accent);outline-offset:1px;}
+
+    .cbt-legend-dot{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:middle;}
+
+    .cbt-section-tab{border:1px solid var(--color-border);background:var(--color-surface);border-radius:999px;padding:.3rem .95rem;font-size:.85rem;margin:.15rem;cursor:pointer;}
+    .cbt-section-tab.active{background:var(--color-primary);color:#fff;border-color:var(--color-primary);}
+
+    .score-stat{border:1px solid var(--color-border);border-radius:var(--radius-md);padding:1rem;text-align:center;background:var(--color-surface);height:100%;}
+    .score-stat .val{font-size:1.6rem;font-weight:800;color:var(--color-primary);}
+    .score-stat .lbl{font-size:.8rem;color:var(--color-text-muted);}
+
+    .cbt-review-item{border:1px solid var(--color-border);border-radius:var(--radius-sm);padding:.9rem;margin-bottom:.75rem;}
+    .cbt-review-item.status-correct{border-left:4px solid var(--color-success);}
+    .cbt-review-item.status-incorrect{border-left:4px solid var(--color-danger);}
+    .cbt-review-item.status-unanswered{border-left:4px solid #B9C2CF;}
+
+    #cbtInsights{white-space:pre-wrap;line-height:1.55;}
+
+    @media (max-width:768px){
+        .cbt-palette-grid{grid-template-columns:repeat(6,1fr);}
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4" style="max-width:1200px;">
+
+    <!-- =========================================================
+         SCREEN 1 — Exam selection
+    ========================================================== -->
+    <div id="screen-select">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <div>
+                <h2 class="mb-0">🖥️ AI CBT Exam Simulator</h2>
+                <p class="text-muted mb-0">Full-length, official-pattern mock tests for the Competitive Exam Hub — timed, palette-based, auto-scored.</p>
+                <p class="text-success small mb-0"><strong>♾️ Unlimited attempts</strong> — retake any exam as many times as you want, with a freshly AI-generated paper (and new topics) every time.</p>
+            </div>
+        </div>
+
+        <div class="row g-3">
+            {% for key, info in exams.items() %}
+            <div class="col-md-6 col-lg-4">
+                <div class="cbt-exam-card">
+                    <h5>{{ info.name }}</h5>
+                    <div class="text-muted small mb-2">{{ info.full_name }}</div>
+                    <div class="mb-2">
+                        <span class="cbt-badge-pill">📝 {{ info.total_questions }} Qs</span>
+                        <span class="cbt-badge-pill">🏆 {{ info.total_marks }} marks</span>
+                        <span class="cbt-badge-pill">⏱ {{ info.duration_minutes }} min</span>
+                    </div>
+                    <div class="small text-muted mb-2" id="progress-{{ key }}"></div>
+                    <button class="btn btn-sm btn-primary w-100" onclick="cbtSelectExam('{{ key }}')">
+                        View Pattern &amp; Start
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+
+    <!-- =========================================================
+         SCREEN 2 — Pattern / instructions
+    ========================================================== -->
+    <div id="screen-instructions" class="d-none">
+        <button class="btn btn-sm btn-link mb-2 ps-0" onclick="cbtShowScreen('select')">&larr; Back to exam list</button>
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0" id="instrExamTitle">Exam Pattern</h4>
+            </div>
+            <div class="card-body">
+                <div id="instrMeta" class="mb-3"></div>
+
+                <h6>Section-wise breakdown</h6>
+                <div class="table-responsive mb-3">
+                    <table class="table table-sm table-bordered" id="instrSectionsTable">
+                        <thead><tr><th>Section</th><th>MCQ</th><th>Numerical</th><th>Marking</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <p class="text-muted small" id="instrSyllabusNote"></p>
+
+                <h6>General Instructions</h6>
+                <ul class="small text-muted">
+                    <li>The clock will be set at the server. A countdown timer will show the remaining time — the test auto-submits when time expires.</li>
+                    <li>The Question Palette shows the status of every question: Not Visited, Not Answered, Answered, and Marked for Review.</li>
+                    <li>Click <strong>Save & Next</strong> to save your answer and move on, or <strong>Mark for Review & Next</strong> to flag a question to revisit.</li>
+                    <li>Use <strong>Clear Response</strong> to deselect your chosen answer.</li>
+                    <li>Only questions with status "Answered" are considered for evaluation and marks.</li>
+                </ul>
+
+                <div class="form-check my-3">
+                    <input class="form-check-input" type="checkbox" id="instrAgree">
+                    <label class="form-check-label" for="instrAgree">
+                        I have read and understood the instructions above.
+                    </label>
+                </div>
+
+                <button class="btn btn-success" id="instrStartBtn" disabled onclick="cbtGenerateTest()">
+                    🚀 Start Test
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================================================
+         SCREEN 3 — Loading
+    ========================================================== -->
+    <div id="screen-loading" class="d-none text-center py-5">
+        <div class="spinner-border text-primary mb-3" role="status" style="width:3rem;height:3rem;"></div>
+        <h5>Generating your official-pattern paper…</h5>
+        <p class="text-muted" id="loadingHint">This can take up to a minute for longer exams — fresh questions are being written section by section.</p>
+    </div>
+
+    <!-- =========================================================
+         SCREEN 4 — Live exam
+    ========================================================== -->
+    <div id="screen-exam" class="d-none">
+        <div class="d-flex flex-wrap align-items-center justify-content-between border rounded p-2 mb-3" style="background:var(--color-surface);">
+            <div>
+                <strong id="examHeaderName">Exam</strong>
+                <span class="text-muted small ms-2">Candidate: {{ session.get('username','') }}</span>
+            </div>
+            <div class="text-end">
+                <span class="text-muted small">Time Left</span>
+                <div id="cbtTimer" class="fs-4">--:--:--</div>
+            </div>
+        </div>
+
+        <div id="sectionTabs" class="mb-2"></div>
+
+        <div class="row g-3">
+            <div class="col-lg-8">
+                <div class="cbt-question-box">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="badge bg-secondary" id="qSectionBadge">Section</span>
+                        <span class="badge bg-info text-dark" id="qTypeBadge">MCQ</span>
+                    </div>
+                    <h6 class="mb-1" id="qNumberLabel">Question 1</h6>
+                    <p class="fs-5" id="qText" style="white-space:pre-wrap;"></p>
+
+                    <div id="qOptionsArea"></div>
+                    <div id="qNumericalArea" class="d-none">
+                        <input type="text" class="form-control" id="qNumericalInput" placeholder="Enter numeric answer">
+                    </div>
+                </div>
+
+                <div class="d-flex flex-wrap gap-2 mt-3">
+                    <button class="btn btn-outline-secondary" onclick="cbtPrev()">&larr; Previous</button>
+                    <button class="btn btn-outline-danger" onclick="cbtClearResponse()">Clear Response</button>
+                    <button class="btn btn-outline-primary" onclick="cbtMarkForReview()">🚩 Mark for Review & Next</button>
+                    <button class="btn btn-success ms-auto" onclick="cbtSaveNext()">Save & Next &rarr;</button>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="border rounded p-2 mb-2 small" style="background:var(--color-surface);">
+                    <div><span class="cbt-legend-dot" style="background:#B9C2CF;"></span>Not Visited <span id="cntNotVisited">0</span></div>
+                    <div><span class="cbt-legend-dot" style="background:var(--color-danger);"></span>Not Answered <span id="cntNotAnswered">0</span></div>
+                    <div><span class="cbt-legend-dot" style="background:var(--color-success);"></span>Answered <span id="cntAnswered">0</span></div>
+                    <div><span class="cbt-legend-dot" style="background:#8E5FD9;"></span>Marked for Review <span id="cntMarked">0</span></div>
+                </div>
+
+                <div class="border rounded p-2" style="background:var(--color-surface);max-height:420px;overflow-y:auto;">
+                    <div class="cbt-palette-grid" id="paletteGrid"></div>
+                </div>
+
+                <button class="btn btn-primary w-100 mt-3" onclick="cbtConfirmSubmit()">✅ Submit Test</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================================================
+         SCREEN 5 — Scorecard
+    ========================================================== -->
+    <div id="screen-scorecard" class="d-none">
+        <h2 class="mb-3">📊 Scorecard — <span id="scExamName"></span></h2>
+
+        <div class="row g-3 mb-3">
+            <div class="col-6 col-md-2"><div class="score-stat"><div class="val" id="scMarks">-</div><div class="lbl">Marks</div></div></div>
+            <div class="col-6 col-md-2"><div class="score-stat"><div class="val" id="scPercentage">-</div><div class="lbl">Percentage</div></div></div>
+            <div class="col-6 col-md-2"><div class="score-stat"><div class="val" id="scAccuracy">-</div><div class="lbl">Accuracy</div></div></div>
+            <div class="col-6 col-md-2"><div class="score-stat"><div class="val" id="scPercentile">-</div><div class="lbl">Percentile</div></div></div>
+            <div class="col-6 col-md-2"><div class="score-stat"><div class="val" id="scRank">-</div><div class="lbl">Predicted Rank</div></div></div>
+            <div class="col-6 col-md-2"><div class="score-stat"><div class="val" id="scTime">-</div><div class="lbl">Time Taken</div></div></div>
+        </div>
+
+        <div class="row g-3 mb-3">
+            <div class="col-md-3"><div class="score-stat"><div class="val text-success" id="scCorrect">-</div><div class="lbl">Correct</div></div></div>
+            <div class="col-md-3"><div class="score-stat"><div class="val text-danger" id="scIncorrect">-</div><div class="lbl">Incorrect</div></div></div>
+            <div class="col-md-3"><div class="score-stat"><div class="val text-muted" id="scUnanswered">-</div><div class="lbl">Unattempted</div></div></div>
+            <div class="col-md-3"><div class="score-stat"><div class="val" style="color:#8E5FD9;" id="scMarkedCount">-</div><div class="lbl">Marked for Review</div></div></div>
+        </div>
+
+        <p class="text-muted small">Percentile &amp; rank are statistical estimates based on typical scoring patterns for this exam (and real attempts by other users of this app), not an official result.</p>
+
+        <div class="card shadow-sm mb-3">
+            <div class="card-header">Section-wise Performance</div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-sm mb-0" id="scSectionTable">
+                        <thead><tr><th>Section</th><th>Correct</th><th>Incorrect</th><th>Unattempted</th><th>Marks</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm mb-3">
+            <div class="card-header">🤖 AI Insights & Improvement Plan</div>
+            <div class="card-body">
+                <div id="cbtInsights">Loading insights…</div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>Solutions Review</span>
+                <button class="btn btn-sm btn-outline-secondary" onclick="cbtToggleReview()">Show / Hide</button>
+            </div>
+            <div class="card-body d-none" id="cbtReviewBody"></div>
+        </div>
+
+        <div class="mb-5">
+            <button class="btn btn-success me-2" onclick="cbtSelectExam(cbtLastScorecard.exam_key)">🔁 Retake This Exam (Fresh Paper)</button>
+            <button class="btn btn-outline-primary" onclick="cbtShowScreen('select')">🖥️ Try Another Exam</button>
+            <p class="text-muted small mt-2 mb-0">There's no limit on attempts — every retake generates a brand new AI paper covering different topics.</p>
+        </div>
+    </div>
+
+</div>
+
+<!-- Submit confirmation modal -->
+<div class="modal fade" id="submitConfirmModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Submit Test?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmSummaryText"></p>
+                <p class="text-muted small mb-0">Once submitted, you can't change your answers.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Continue Test</button>
+                <button class="btn btn-danger" onclick="cbtSubmitTest()">Submit Now</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const CBT_EXAMS = {{ exams | tojson }};
+
+let cbtCurrentExamKey = null;
+let cbtTest = null;              // sanitized test from server
+let cbtAnswers = {};              // {qid: value}
+let cbtMarked = new Set();
+let cbtVisited = new Set();
+let cbtIndex = 0;
+let cbtRemainingSeconds = 0;
+let cbtTimerHandle = null;
+let cbtStartedAt = null;
+let cbtActiveSection = null;
+let cbtLastScorecard = null;
+
+function cbtShowScreen(name){
+    ["select","instructions","loading","exam","scorecard"].forEach(s=>{
+        document.getElementById("screen-"+s).classList.toggle("d-none", s!==name);
+    });
+    if(name === "select"){
+        cbtLoadHistory();
+    }
+}
+
+async function cbtLoadHistory(){
+    try{
+        const resp = await fetch("/api/exam-hub/history");
+        if(!resp.ok) return;
+        const summary = await resp.json();
+
+        Object.keys(CBT_EXAMS).forEach(key=>{
+            const el = document.getElementById("progress-"+key);
+            if(!el) return;
+            const s = summary[key];
+            el.innerHTML = s
+                ? `📈 Attempted <strong>${s.attempts_count}x</strong> · Best <strong>${s.best_percentage}%</strong> · Last <strong>${s.latest_percentage}%</strong>`
+                : `Not attempted yet — take your first free mock test.`;
+        });
+    }catch(err){ /* history is a nice-to-have, fail silently */ }
+}
+
+document.addEventListener("DOMContentLoaded", cbtLoadHistory);
+
+function cbtSelectExam(key){
+    cbtCurrentExamKey = key;
+    const info = CBT_EXAMS[key];
+
+    document.getElementById("instrExamTitle").innerText = info.name + " — " + (info.full_name || "");
+    document.getElementById("instrMeta").innerHTML =
+        `<span class="cbt-badge-pill">⏱ Duration: ${info.duration_minutes} min</span>` +
+        `<span class="cbt-badge-pill">📝 ${info.total_questions} Questions</span>` +
+        `<span class="cbt-badge-pill">🏆 ${info.total_marks} Marks</span>` +
+        (info.conducting_body ? `<span class="cbt-badge-pill">🏛 ${info.conducting_body}</span>` : "");
+
+    const tbody = document.querySelector("#instrSectionsTable tbody");
+    tbody.innerHTML = "";
+    info.sections.forEach(s=>{
+        const wrongMcq = s.marks_wrong_mcq !== undefined ? s.marks_wrong_mcq : 0;
+        const markScheme = `+${s.marks_correct} / -${wrongMcq}`;
+        tbody.innerHTML += `<tr><td>${s.name}</td><td>${s.mcq_count||0}</td><td>${s.numerical_count||0}</td><td>${markScheme}</td></tr>`;
+    });
+
+    document.getElementById("instrSyllabusNote").innerText = info.syllabus_note || "";
+    document.getElementById("instrAgree").checked = false;
+    document.getElementById("instrStartBtn").disabled = true;
+
+    cbtShowScreen("instructions");
+}
+
+document.addEventListener("change", function(e){
+    if(e.target && e.target.id === "instrAgree"){
+        document.getElementById("instrStartBtn").disabled = !e.target.checked;
+    }
+});
+
+async function cbtGenerateTest(){
+    cbtShowScreen("loading");
+    const info = CBT_EXAMS[cbtCurrentExamKey];
+    document.getElementById("loadingHint").innerText =
+        `Writing ${info.total_questions} fresh ${info.name} questions across ${info.sections.length} section(s)…`;
+
+    try{
+        const resp = await fetch("/api/exam-hub/generate", {
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body: JSON.stringify({exam_key: cbtCurrentExamKey})
+        });
+        const data = await resp.json();
+
+        if(!resp.ok || data.error){
+            alert(data.error || "Could not generate the test. Please try again.");
+            cbtShowScreen("instructions");
+            return;
+        }
+
+        cbtStartExam(data);
+    }catch(err){
+        alert("Network error while generating the test. Please try again.");
+        cbtShowScreen("instructions");
+    }
+}
+
+function cbtStartExam(test){
+    cbtTest = test;
+    cbtAnswers = {};
+    cbtMarked = new Set();
+    cbtVisited = new Set();
+    cbtIndex = 0;
+    cbtRemainingSeconds = test.duration_minutes * 60;
+    cbtStartedAt = Date.now();
+    cbtActiveSection = test.questions.length ? test.questions[0].section : null;
+
+    document.getElementById("examHeaderName").innerText = test.exam_name + " — Full Mock Test";
+
+    const tabsEl = document.getElementById("sectionTabs");
+    tabsEl.innerHTML = "";
+    (test.sections || []).forEach(sec=>{
+        const btn = document.createElement("button");
+        btn.className = "cbt-section-tab" + (sec.name===cbtActiveSection ? " active" : "");
+        btn.innerText = sec.name;
+        btn.onclick = ()=>cbtJumpToSection(sec.name);
+        tabsEl.appendChild(btn);
+    });
+
+    cbtVisited.add(test.questions[0].id);
+    cbtRenderQuestion();
+    cbtRenderPalette();
+    cbtStartTimer();
+    cbtShowScreen("exam");
+}
+
+function cbtJumpToSection(sectionName){
+    cbtActiveSection = sectionName;
+    document.querySelectorAll(".cbt-section-tab").forEach(t=>{
+        t.classList.toggle("active", t.innerText===sectionName);
+    });
+    const idx = cbtTest.questions.findIndex(q=>q.section===sectionName);
+    if(idx !== -1){
+        cbtIndex = idx;
+        cbtVisited.add(cbtTest.questions[idx].id);
+        cbtRenderQuestion();
+        cbtRenderPalette();
+    }
+}
+
+function cbtStartTimer(){
+    clearInterval(cbtTimerHandle);
+    cbtUpdateTimerDisplay();
+    cbtTimerHandle = setInterval(()=>{
+        cbtRemainingSeconds--;
+        cbtUpdateTimerDisplay();
+        if(cbtRemainingSeconds <= 0){
+            clearInterval(cbtTimerHandle);
+            alert("Time's up! Auto-submitting your test.");
+            cbtSubmitTest();
+        }
+    }, 1000);
+}
+
+function cbtUpdateTimerDisplay(){
+    const s = Math.max(0, cbtRemainingSeconds);
+    const h = Math.floor(s/3600);
+    const m = Math.floor((s%3600)/60);
+    const sec = s%60;
+    const el = document.getElementById("cbtTimer");
+    el.innerText = `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(sec).padStart(2,"0")}`;
+    el.classList.toggle("text-danger", s <= 300);
+}
+
+function cbtRenderQuestion(){
+    const q = cbtTest.questions[cbtIndex];
+    if(!q) return;
+
+    cbtActiveSection = q.section;
+    document.querySelectorAll(".cbt-section-tab").forEach(t=>{
+        t.classList.toggle("active", t.innerText===q.section);
+    });
+
+    document.getElementById("qSectionBadge").innerText = q.section;
+    document.getElementById("qTypeBadge").innerText = q.type === "mcq" ? "MCQ" : "Numerical";
+    document.getElementById("qNumberLabel").innerText = `Question ${cbtIndex+1} of ${cbtTest.questions.length}`;
+    document.getElementById("qText").innerText = q.question;
+
+    const optionsArea = document.getElementById("qOptionsArea");
+    const numericalArea = document.getElementById("qNumericalArea");
+    const numericalInput = document.getElementById("qNumericalInput");
+
+    if(q.type === "mcq"){
+        numericalArea.classList.add("d-none");
+        optionsArea.classList.remove("d-none");
+        optionsArea.innerHTML = "";
+        (q.options || []).forEach(opt=>{
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "cbt-option" + (cbtAnswers[q.id]===opt ? " selected" : "");
+            btn.innerText = opt;
+            btn.onclick = ()=>{
+                cbtAnswers[q.id] = opt;
+                cbtRenderQuestion();
+            };
+            optionsArea.appendChild(btn);
+        });
+    } else {
+        optionsArea.classList.add("d-none");
+        numericalArea.classList.remove("d-none");
+        numericalInput.value = cbtAnswers[q.id] || "";
+        numericalInput.oninput = (e)=>{ cbtAnswers[q.id] = e.target.value; };
+    }
+}
+
+function cbtQuestionStatus(q){
+    const answered = cbtAnswers[q.id] !== undefined && cbtAnswers[q.id] !== "";
+    const marked = cbtMarked.has(q.id);
+    const visited = cbtVisited.has(q.id);
+
+    if(marked && answered) return "answered-marked";
+    if(marked) return "marked";
+    if(answered) return "answered";
+    if(visited) return "not-answered";
+    return "not-visited";
+}
+
+function cbtRenderPalette(){
+    const grid = document.getElementById("paletteGrid");
+    grid.innerHTML = "";
+    let counts = {"not-visited":0,"not-answered":0,"answered":0,"marked":0,"answered-marked":0};
+
+    cbtTest.questions.forEach((q, idx)=>{
+        const status = cbtQuestionStatus(q);
+        counts[status]++;
+        const btn = document.createElement("button");
+        btn.className = `cbt-palette-btn pstate-${status}` + (idx===cbtIndex ? " current" : "");
+        btn.innerText = idx+1;
+        btn.title = q.section;
+        btn.onclick = ()=>{
+            cbtIndex = idx;
+            cbtVisited.add(q.id);
+            cbtRenderQuestion();
+            cbtRenderPalette();
+        };
+        grid.appendChild(btn);
+    });
+
+    document.getElementById("cntNotVisited").innerText = counts["not-visited"];
+    document.getElementById("cntNotAnswered").innerText = counts["not-answered"] + counts["marked"];
+    document.getElementById("cntAnswered").innerText = counts["answered"] + counts["answered-marked"];
+    document.getElementById("cntMarked").innerText = counts["marked"] + counts["answered-marked"];
+}
+
+function cbtGoTo(idx){
+    if(idx < 0 || idx >= cbtTest.questions.length) return;
+    cbtIndex = idx;
+    cbtVisited.add(cbtTest.questions[idx].id);
+    cbtRenderQuestion();
+    cbtRenderPalette();
+}
+
+function cbtSaveNext(){ cbtGoTo(cbtIndex+1); }
+function cbtPrev(){ cbtGoTo(cbtIndex-1); }
+
+function cbtClearResponse(){
+    const q = cbtTest.questions[cbtIndex];
+    delete cbtAnswers[q.id];
+    cbtRenderQuestion();
+    cbtRenderPalette();
+}
+
+function cbtMarkForReview(){
+    const q = cbtTest.questions[cbtIndex];
+    cbtMarked.add(q.id);
+    cbtGoTo(cbtIndex+1);
+}
+
+function cbtConfirmSubmit(){
+    const total = cbtTest.questions.length;
+    const answered = Object.keys(cbtAnswers).filter(k=>cbtAnswers[k]!=="").length;
+    document.getElementById("confirmSummaryText").innerText =
+        `You've answered ${answered} of ${total} questions. ${total-answered} question(s) will be marked unattempted.`;
+    new bootstrap.Modal(document.getElementById("submitConfirmModal")).show();
+}
+
+async function cbtSubmitTest(){
+    clearInterval(cbtTimerHandle);
+    const modalEl = document.getElementById("submitConfirmModal");
+    const modal = bootstrap.Modal.getInstance(modalEl);
+    if(modal) modal.hide();
+
+    const totalTimeSeconds = Math.round((Date.now() - cbtStartedAt) / 1000);
+
+    cbtShowScreen("loading");
+    document.getElementById("loadingHint").innerText = "Grading your paper and generating your scorecard…";
+
+    try{
+        const resp = await fetch("/api/exam-hub/submit", {
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body: JSON.stringify({
+                test_id: cbtTest.test_id,
+                answers: cbtAnswers,
+                marked_for_review: Array.from(cbtMarked),
+                total_time_seconds: totalTimeSeconds
+            })
+        });
+        const data = await resp.json();
+
+        if(!resp.ok || data.error){
+            alert(data.error || "Could not submit the test.");
+            cbtShowScreen("exam");
+            cbtStartTimer();
+            return;
+        }
+
+        cbtRenderScorecard(data);
+    }catch(err){
+        alert("Network error while submitting. Please try again.");
+        cbtShowScreen("exam");
+        cbtStartTimer();
+    }
+}
+
+function cbtRenderScorecard(sc){
+    cbtLastScorecard = sc;
+    document.getElementById("scExamName").innerText = sc.exam_name;
+    document.getElementById("scMarks").innerText = `${sc.marks_obtained} / ${sc.max_marks}`;
+    document.getElementById("scPercentage").innerText = `${sc.percentage}%`;
+    document.getElementById("scAccuracy").innerText = `${sc.accuracy}%`;
+    document.getElementById("scPercentile").innerText = `${sc.percentile}`;
+    document.getElementById("scRank").innerText = `~${sc.predicted_rank.toLocaleString()}`;
+
+    const t = sc.total_time_seconds || 0;
+    document.getElementById("scTime").innerText = `${Math.floor(t/60)}m ${t%60}s`;
+
+    document.getElementById("scCorrect").innerText = sc.correct;
+    document.getElementById("scIncorrect").innerText = sc.incorrect;
+    document.getElementById("scUnanswered").innerText = sc.unanswered;
+    document.getElementById("scMarkedCount").innerText = sc.marked_for_review_count;
+
+    const tbody = document.querySelector("#scSectionTable tbody");
+    tbody.innerHTML = "";
+    Object.entries(sc.section_stats || {}).forEach(([name, s])=>{
+        tbody.innerHTML += `<tr><td>${name}</td><td class="text-success">${s.correct}</td><td class="text-danger">${s.incorrect}</td><td class="text-muted">${s.unanswered}</td><td>${s.marks} / ${s.max_marks}</td></tr>`;
+    });
+
+    document.getElementById("cbtInsights").innerText = sc.ai_insights || "Insights unavailable.";
+
+    const reviewBody = document.getElementById("cbtReviewBody");
+    reviewBody.innerHTML = "";
+    (sc.details || []).forEach((d, idx)=>{
+        const div = document.createElement("div");
+        div.className = `cbt-review-item status-${d.status}`;
+        div.innerHTML = `
+            <div class="d-flex justify-content-between">
+                <strong>Q${idx+1}. ${d.section}${d.topic ? " · " + d.topic : ""}</strong>
+                <span class="badge ${d.status==='correct'?'bg-success':d.status==='incorrect'?'bg-danger':'bg-secondary'}">${d.status}</span>
+            </div>
+            <p class="mb-1" style="white-space:pre-wrap;">${d.question}</p>
+            <div class="small">Your answer: <strong>${d.user_answer}</strong></div>
+            <div class="small">Correct answer: <strong>${d.correct_answer}</strong></div>
+            <div class="small text-muted mt-1">${d.explanation || ""}</div>
+        `;
+        reviewBody.appendChild(div);
+    });
+
+    cbtShowScreen("scorecard");
+}
+
+function cbtToggleReview(){
+    document.getElementById("cbtReviewBody").classList.toggle("d-none");
+}
+</script>
+{% endblock %}

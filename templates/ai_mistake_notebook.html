@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}AI Mistake Notebook{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+<div class="card shadow-lg p-4">
+
+<h2 class="text-center text-danger">
+
+📝 AI Mistake Notebook
+
+</h2>
+
+<hr>
+
+<form method="POST">
+
+<div class="mb-3">
+
+<label>Question</label>
+
+<textarea
+class="form-control"
+name="question"
+rows="3"
+required></textarea>
+
+</div>
+
+<div class="mb-3">
+
+<label>Your Wrong Answer</label>
+
+<textarea
+class="form-control"
+name="wrong_answer"
+rows="2"></textarea>
+
+</div>
+
+<div class="mb-3">
+
+<label>Correct Answer</label>
+
+<textarea
+class="form-control"
+name="correct_answer"
+rows="2"></textarea>
+
+</div>
+
+<div class="mb-3">
+
+<label>Topic</label>
+
+<input
+class="form-control"
+name="topic">
+
+</div>
+
+<button class="btn btn-danger w-100">
+
+💾 Save Mistake
+
+</button>
+
+</form>
+
+<hr>
+
+<h4>📚 Saved Mistakes</h4>
+
+{% for m in mistakes %}
+
+<div class="card p-3 mt-3">
+
+<b>Question:</b>
+
+{{ m.question }}
+
+<br><br>
+
+<b>Your Answer:</b>
+
+{{ m.wrong_answer }}
+
+<br><br>
+
+<b>Correct Answer:</b>
+
+{{ m.correct_answer }}
+
+<br><br>
+
+<b>Topic:</b>
+
+{{ m.topic }}
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+{% endblock %}

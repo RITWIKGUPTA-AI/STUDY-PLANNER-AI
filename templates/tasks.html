@@ -1,0 +1,611 @@
+{% extends "base.html" %}
+
+{% block title %}
+Task Manager
+{% endblock %}
+
+{% block content %}
+
+<div class="wrapper">
+
+    <!-- ================= Sidebar ================= -->
+
+    <div class="sidebar">
+
+        <h3 class="text-center">🎓 Study Planner</h3>
+
+        <hr>
+
+        <a href="/dashboard">🏠 Dashboard</a>
+        <a href="/subjects">📚 Subjects</a>
+        <a href="/tasks" class="active">✅ Tasks</a>
+        <a href="/planner">📖 Planner</a>
+        <a href="/notes">📝 Notes</a>
+        <a href="/goals">🎯 Goals</a>
+        <a href="/attendance">📊 Attendance</a>
+        <a href="/analytics">📈 Analytics</a>
+        <a href="/settings">⚙️ Settings</a>
+        <a href="/logout">🚪 Logout</a>
+
+    </div>
+
+    <!-- ================= Main Content ================= -->
+
+    <div class="content">
+
+        <!-- Topbar -->
+
+        <div class="topbar d-flex justify-content-between align-items-center">
+
+            <div>
+
+                <h2>✅ Task Manager</h2>
+
+                <p class="text-muted mb-0">
+
+                    Organize your daily study tasks efficiently.
+
+                </p>
+
+            </div>
+
+            <div>
+
+                <a href="/dashboard"
+                   class="btn btn-primary">
+
+                    ← Dashboard
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="container-fluid mt-4">
+
+            <!-- ================= Statistics ================= -->
+
+            <div class="row g-4 mb-4">
+
+                <div class="col-lg-3 col-md-6">
+
+                    <div class="card dashboard-card shadow">
+
+                        <div class="card-body text-center">
+
+                            <h6>Total Tasks</h6>
+
+                            <h2>{{ total }}</h2>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+
+                    <div class="card dashboard-card shadow">
+
+                        <div class="card-body text-center">
+
+                            <h6>Completed</h6>
+
+                            <h2 class="text-success">
+
+                                {{ completed }}
+
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+
+                    <div class="card dashboard-card shadow">
+
+                        <div class="card-body text-center">
+
+                            <h6>Pending</h6>
+
+                            <h2 class="text-danger">
+
+                                {{ pending }}
+
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+
+                    <div class="card dashboard-card shadow">
+
+                        <div class="card-body text-center">
+
+                            <h6>Completion</h6>
+
+                            <h2 class="text-primary">
+
+                                {{ progress }}%
+
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ================= Progress ================= -->
+
+            <div class="card shadow mb-4">
+
+                <div class="card-body">
+
+                    <h5 class="mb-3">
+
+                        📈 Overall Progress
+
+                    </h5>
+
+                    <div class="progress" style="height:25px;">
+
+                        <div
+                            class="progress-bar bg-success"
+                            role="progressbar"
+                            style="width: {{ progress }}%;">
+
+                            {{ progress }}%
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ================= Add Task ================= -->
+
+            <div class="card shadow mb-4">
+
+                <div class="card-header bg-primary text-white">
+
+                    ➕ Add New Task
+
+                </div>
+
+                <div class="card-body">
+
+                    <form method="POST">
+
+                        <div class="row">
+
+                            <div class="col-lg-5 mb-3">
+
+                                <label class="form-label">
+
+                                    Task Title
+
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="title"
+                                    class="form-control"
+                                    placeholder="Enter task title"
+                                    required>
+
+                            </div>
+
+                            <div class="col-lg-2 mb-3">
+
+                                <label class="form-label">
+
+                                    Priority
+
+                                </label>
+
+                                <select
+                                    name="priority"
+                                    class="form-select">
+
+                                    <option>High</option>
+                                    <option selected>Medium</option>
+                                    <option>Low</option>
+
+                                </select>
+
+                            </div>
+
+                            <div class="col-lg-3 mb-3">
+
+                                <label class="form-label">
+
+                                    Due Date
+
+                                </label>
+
+                                <input
+                                    type="date"
+                                    name="due_date"
+                                    class="form-control">
+
+                            </div>
+
+                            <div class="col-lg-2 d-grid mb-3">
+
+                                <label class="form-label">&nbsp;</label>
+
+                                <button class="btn btn-success">
+
+                                    Add Task
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+            <!-- ================= Search ================= -->
+
+            <div class="card shadow mb-4">
+
+                <div class="card-body">
+
+                    <form method="GET">
+
+                        <div class="row">
+
+                            <div class="col-md-10">
+
+                                <input
+                                    type="text"
+                                    name="search"
+                                    class="form-control"
+                                    placeholder="Search by title, priority, status or due date...">
+
+                            </div>
+
+                            <div class="col-md-2 d-grid">
+
+                                <button class="btn btn-primary">
+
+                                    🔍 Search
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+            <!-- ================= Task Table ================= -->
+             <div class="card shadow mb-4">
+
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+
+                    <span>📋 Task List</span>
+
+                    <a
+                        href="/clear_completed"
+                        class="btn btn-light btn-sm">
+
+                        🗑 Clear Completed
+
+                    </a>
+
+                </div>
+
+                <div class="card-body">
+
+                    {% if tasks %}
+
+                    <div class="table-responsive">
+
+                        <table class="table table-hover table-bordered align-middle">
+
+                            <thead class="table-light">
+
+                                <tr>
+
+                                    <th>#</th>
+
+                                    <th>Title</th>
+
+                                    <th>Priority</th>
+
+                                    <th>Due Date</th>
+
+                                    <th>Status</th>
+
+                                    <th width="320">
+
+                                        Actions
+
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                            {% for task in tasks %}
+
+                                <tr>
+
+                                    <td>
+
+                                        {{ loop.index }}
+
+                                    </td>
+
+                                    <td>
+
+                                        <strong>
+
+                                            {{ task.title }}
+
+                                        </strong>
+
+                                    </td>
+
+                                    <td>
+
+                                        {% if task.priority == "High" %}
+
+                                            <span class="badge bg-danger">
+
+                                                High
+
+                                            </span>
+
+                                        {% elif task.priority == "Medium" %}
+
+                                            <span class="badge bg-warning text-dark">
+
+                                                Medium
+
+                                            </span>
+
+                                        {% else %}
+
+                                            <span class="badge bg-success">
+
+                                                Low
+
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+                                    <td>
+
+                                        {% if task.due_date %}
+
+                                            {{ task.due_date }}
+
+                                        {% else %}
+
+                                            -
+
+                                        {% endif %}
+
+                                    </td>
+
+                                    <td>
+
+                                        {% if task.status == "Completed" %}
+
+                                            <span class="badge bg-success">
+
+                                                ✓ Completed
+
+                                            </span>
+
+                                        {% else %}
+
+                                            <span class="badge bg-secondary">
+
+                                                Pending
+
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+                                    <td>
+
+                                        {% if task.status == "Pending" %}
+
+                                            <a
+
+                                                href="/complete_task/{{ loop.index0 }}"
+
+                                                class="btn btn-success btn-sm">
+
+                                                ✓ Complete
+
+                                            </a>
+
+                                        {% else %}
+
+                                            <a
+
+                                                href="/pending_task/{{ loop.index0 }}"
+
+                                                class="btn btn-secondary btn-sm">
+
+                                                ↺ Pending
+
+                                            </a>
+
+                                        {% endif %}
+
+                                        <a
+
+                                            href="/edit_task/{{ loop.index0 }}"
+
+                                            class="btn btn-warning btn-sm">
+
+                                            ✏ Edit
+
+                                        </a>
+
+                                        <a
+
+                                            href="/delete_task/{{ loop.index0 }}"
+
+                                            class="btn btn-danger btn-sm"
+
+                                            onclick="return confirm('Delete this task?')">
+
+                                            🗑 Delete
+
+                                        </a>
+
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                    {% else %}
+
+                    <div class="text-center py-5">
+
+                        <h3>
+
+                            📋 No Tasks Found
+
+                        </h3>
+
+                        <p class="text-muted">
+
+                            Add your first task using the form above.
+
+                        </p>
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <!-- Priority Summary -->
+
+            <div class="row g-4 mb-4">
+
+                <div class="col-md-4">
+
+                    <div class="card shadow dashboard-card">
+
+                        <div class="card-body text-center">
+
+                            <h6>
+
+                                🔴 High Priority
+
+                            </h6>
+
+                            <h2 class="text-danger">
+
+                                {{ high_priority }}
+
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="card shadow dashboard-card">
+
+                        <div class="card-body text-center">
+
+                            <h6>
+
+                                🟡 Medium Priority
+
+                            </h6>
+
+                            <h2 class="text-warning">
+
+                                {{ medium_priority }}
+
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="card shadow dashboard-card">
+
+                        <div class="card-body text-center">
+
+                            <h6>
+
+                                🟢 Low Priority
+
+                            </h6>
+
+                            <h2 class="text-success">
+
+                                {{ low_priority }}
+
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            </div>
+
+            </div>
+
+            </div>
+
+            {% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Refund Policy{% endblock %}
+{% block content %}
+<div class="container mt-5" style="max-width:760px;">
+    <h2>Refund Policy</h2>
+    <p class="text-muted">Last updated: {{ current_year }}</p>
+
+    <p>Student Study Planner is completely free to use — every feature,
+    including all AI-powered tools, is available to every registered user
+    at no cost. There are no subscriptions, payments, or in-app purchases,
+    so there's nothing to refund.</p>
+
+    <h5 class="mt-4">Running into a problem?</h5>
+    <p>If something isn't working correctly, please use
+    <a href="{{ url_for('report_issue') if session.get('username') else url_for('login') }}">Report an Issue</a>
+    to let us know and we'll look into fixing it. You can track the status
+    of anything you've reported on your
+    <a href="{{ url_for('my_tickets') if session.get('username') else url_for('login') }}">My Reports</a> page.</p>
+
+    <h5 class="mt-4">Contact</h5>
+    <p>Questions: [your support email].</p>
+</div>
+{% endblock %}

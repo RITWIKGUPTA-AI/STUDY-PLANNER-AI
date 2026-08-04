@@ -1,0 +1,239 @@
+{% extends "base.html" %}
+
+{% block title %}
+Backup
+{% endblock %}
+
+{% block content %}
+
+<div class="wrapper">
+
+    <!-- Sidebar -->
+
+    <div class="sidebar">
+
+        <h3 class="text-center">🎓 Study Planner</h3>
+
+        <hr>
+
+        <a href="/dashboard">🏠 Dashboard</a>
+        <a href="/subjects">📚 Subjects</a>
+        <a href="/tasks">✅ Tasks</a>
+        <a href="/planner">📖 Planner</a>
+        <a href="/timetable">🗓️ Timetable</a>
+        <a href="/notes">📝 Notes</a>
+        <a href="/goals">🎯 Goals</a>
+        <a href="/attendance">📊 Attendance</a>
+        <a href="/analytics">📈 Analytics</a>
+        <a href="/reminders">🔔 Reminders</a>
+        <a href="/profile">👤 Profile</a>
+        <a href="/backup_page">💾 Backup</a>
+
+        <hr>
+
+        <a href="/logout">🚪 Logout</a>
+
+    </div>
+
+    <!-- Main Content -->
+
+    <div class="content">
+
+        <!-- Topbar -->
+
+        <div class="topbar d-flex justify-content-between align-items-center">
+
+            <h2>💾 Backup Manager</h2>
+
+            <a href="/dashboard" class="btn btn-primary">
+
+                Dashboard
+
+            </a>
+
+        </div>
+
+        <div class="container-fluid mt-4">
+
+            <!-- Statistics -->
+
+            <div class="row mb-4">
+
+                <div class="col-md-4">
+
+                    <div class="card shadow text-center p-3">
+
+                        <h5>Total Backups</h5>
+
+                        <h2>{{ backups|length }}</h2>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-8">
+
+                    <div class="card shadow text-center p-3">
+
+                        <h5>Create a Fresh Backup</h5>
+
+                        <br>
+
+                        <a
+                            href="/backup"
+                            class="btn btn-success btn-lg">
+
+                            📦 Create & Download Backup
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+    <div class="card shadow p-4 mb-4">
+
+        <h4>
+
+            ♻ Restore Backup
+
+        </h4>
+
+        <form
+            action="/backup/restore"
+            method="POST"
+            enctype="multipart/form-data">
+
+            <div class="row">
+
+                <div class="col-md-9">
+
+                    <input
+                        type="file"
+                        name="backup_file"
+                        class="form-control"
+                        accept=".zip"
+                        required>
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <button
+                        class="btn btn-warning w-100">
+
+                        Restore Backup
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+            <!-- Backup History -->
+
+            <div class="card shadow p-4">
+
+                <h4 class="mb-3">
+
+                    📂 Backup History
+
+                </h4>
+
+                <table class="table table-hover">
+
+                    <thead class="table-primary">
+
+                        <tr>
+
+                            <th>#</th>
+
+                            <th>Backup File</th>
+
+                            <th width="250">
+
+                                Actions
+
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    {% if backups %}
+
+                        {% for file in backups %}
+
+                        <tr>
+
+                            <td>
+
+                                {{ loop.index }}
+
+                            </td>
+
+                            <td>
+
+                                {{ file }}
+
+                            </td>
+
+                            <td>
+
+                                <a
+                                    href="/backup/download/{{ file }}"
+                                    class="btn btn-primary btn-sm">
+
+                                    ⬇ Download
+
+                                </a>
+
+                                <a
+                                    href="/backup/delete/{{ file }}"
+                                    class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Delete this backup?')">
+
+                                    🗑 Delete
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <tr>
+
+                            <td colspan="3" class="text-center">
+
+                                📭 No Backups Available
+
+                            </td>
+
+                        </tr>
+
+                    {% endif %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

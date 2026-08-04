@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2>AI Study Plan Generator</h2>
+
+    <form method="POST">
+
+    <div class="mb-3">
+        <label class="form-label">Target Exam <span class="text-muted small">(optional — tailors the AI's answer)</span></label>
+        <select name="exam" class="form-select">
+            <option value="">General / Not exam-specific</option>
+            <option>JEE</option>
+            <option>NEET</option>
+            <option>UPSC</option>
+            <option>GATE</option>
+            <option>CAT</option>
+            <option>CUET</option>
+            <option>SSC</option>
+            <option>Banking</option>
+        </select>
+    </div>
+
+
+        <div class="mb-3">
+            <label>Subjects</label>
+            <input type="text" name="subjects"
+                   class="form-control"
+                   placeholder="Physics, Chemistry, Maths" required>
+        </div>
+
+        <div class="mb-3">
+            <label>Exam Date</label>
+            <input type="date" name="exam_date"
+                   class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label>Daily Study Hours</label>
+            <input type="number" name="study_hours"
+                   class="form-control" required>
+        </div>
+
+        <button class="btn btn-primary">
+            Generate Plan
+        </button>
+
+    </form>
+
+    {% if plan %}
+
+    <div class="card mt-4 p-3">
+        <pre style="white-space: pre-wrap;">{{ plan }}</pre>
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% include "partials/visual_aid.html" %}
+
+{% endblock %}

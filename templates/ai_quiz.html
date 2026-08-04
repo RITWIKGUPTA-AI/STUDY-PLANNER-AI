@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2>AI Quiz Generator</h2>
+
+    <form method="POST">
+
+    <div class="mb-3">
+        <label class="form-label">Target Exam <span class="text-muted small">(optional — tailors the AI's answer)</span></label>
+        <select name="exam" class="form-select">
+            <option value="">General / Not exam-specific</option>
+            <option>JEE</option>
+            <option>NEET</option>
+            <option>UPSC</option>
+            <option>GATE</option>
+            <option>CAT</option>
+            <option>CUET</option>
+            <option>SSC</option>
+            <option>Banking</option>
+        </select>
+    </div>
+
+
+        <input type="text"
+               name="topic"
+               class="form-control"
+               placeholder="Enter topic (e.g. Thermodynamics)"
+               required>
+
+        <button class="btn btn-warning mt-3">
+            Generate Quiz
+        </button>
+
+    </form>
+
+    {% if quiz %}
+
+    <div class="card mt-4 p-3">
+        <pre style="white-space: pre-wrap;">{{ quiz }}</pre>
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% include "partials/visual_aid.html" %}
+
+{% endblock %}

@@ -1,0 +1,267 @@
+{% extends "base.html" %}
+
+{% block title %}
+AI Tutor
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card shadow-lg rounded-4">
+
+        <div class="card-header bg-primary text-white">
+
+            <h3>🤖 AI Personal Tutor</h3>
+
+            <small>
+                Ask anything about your studies.
+            </small>
+
+        </div>
+
+        <div class="card-body">
+
+            <!-- Chat Area -->
+
+            <div id="chatBox"
+                 style="
+                 height:450px;
+                 overflow-y:auto;
+                 border:1px solid #ddd;
+                 padding:15px;
+                 border-radius:10px;
+                 background:#f8f9fa;
+                 ">
+
+            </div>
+
+            <div class="mt-3">
+
+                <textarea
+                    id="question"
+                    class="form-control"
+                    rows="3"
+                    placeholder="Ask anything..."></textarea>
+
+            </div>
+
+            <div class="mt-3">
+
+                <button
+                    class="btn btn-primary"
+                    onclick="sendQuestion()">
+
+                    Ask AI
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+const chatBox = document.getElementById("chatBox");
+const questionBox = document.getElementById("question");
+
+questionBox.addEventListener("keypress", function(e){
+
+    if(e.key==="Enter" && !e.shiftKey){
+
+        e.preventDefault();
+
+        sendQuestion();
+
+    }
+
+});
+
+async function sendQuestion(){
+
+    let question = questionBox.value.trim();
+
+    if(question=="")
+        return;
+
+    addUserMessage(question);
+
+    questionBox.value="";
+
+    showLoading();
+
+    let response = await fetch("/ask-ai",{
+
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify({
+            question:question
+        })
+
+    });
+
+    let data = await response.json();
+
+    removeLoading();
+
+    typeMessage(data.answer, data.mermaid_code, data.image_url);
+
+}
+
+function addUserMessage(message){
+
+    chatBox.innerHTML += `
+
+    <div class="text-end mb-3">
+
+        <div class="d-inline-block bg-primary text-white rounded-4 p-3">
+
+            ${message}
+
+        </div>
+
+    </div>
+
+    `;
+
+    scrollBottom();
+
+}
+
+function showLoading(){
+
+    chatBox.innerHTML += `
+
+    <div id="loadingBox" class="mb-3">
+
+        <div class="d-inline-block bg-light rounded-4 p-3">
+
+            🤖 AI is thinking...
+
+        </div>
+
+    </div>
+
+    `;
+
+    scrollBottom();
+
+}
+
+function removeLoading(){
+
+    let box=document.getElementById("loadingBox");
+
+    if(box)
+        box.remove();
+
+}
+
+function typeMessage(message, mermaidCode, imageUrl){
+
+    let id="msg"+Date.now();
+
+    chatBox.innerHTML += `
+
+    <div class="mb-3">
+
+        <div id="${id}"
+
+        class="d-inline-block bg-light rounded-4 p-3">
+
+        </div>
+
+    </div>
+
+    `;
+
+    let box=document.getElementById(id);
+
+    let i=0;
+
+    let timer=setInterval(()=>{
+
+        box.innerHTML+=message.charAt(i);
+
+        i++;
+
+        scrollBottom();
+
+        if(i>=message.length){
+
+            clearInterval(timer);
+
+            box.innerHTML+=`
+
+            <hr>
+
+            <button
+            class="btn btn-sm btn-outline-primary"
+            onclick="copyText('${id}')">
+
+            Copy
+
+            </button>
+
+            `;
+
+            if (mermaidCode) {
+
+                let diagramId = "diagram" + Date.now();
+
+                box.innerHTML += `
+                <hr>
+                <div class="fw-semibold small mb-2">🧩 Concept Diagram</div>
+                <div class="mermaid" id="${diagramId}">${mermaidCode}</div>
+                `;
+
+                if (window.renderAllDiagrams) {
+                    renderAllDiagrams();
+                }
+            }
+
+            if (imageUrl) {
+                box.innerHTML += `
+                <hr>
+                <div class="fw-semibold small mb-2">🖼️ Illustration</div>
+                <img src="${imageUrl}" alt="Illustration" class="img-fluid rounded" style="max-height:320px;" loading="lazy">
+                `;
+            }
+
+            scrollBottom();
+
+        }
+
+    },10);
+
+}
+
+function copyText(id){
+
+    navigator.clipboard.writeText(
+
+        document.getElementById(id).innerText
+
+    );
+
+    alert("Copied");
+
+}
+
+function scrollBottom(){
+
+    chatBox.scrollTop=chatBox.scrollHeight;
+
+}
+
+</script>
+
+{% endblock %}

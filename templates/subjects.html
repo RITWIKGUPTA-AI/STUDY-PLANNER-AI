@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block title %}
+Subjects
+{% endblock %}
+
+{% block content %}
+
+<div class="wrapper">
+
+<div class="sidebar">
+
+<h3>Study Planner</h3>
+
+<hr>
+
+<a href="/dashboard">Dashboard</a>
+
+<a href="/subjects">Subjects</a>
+
+<a href="/tasks">Tasks</a>
+
+<a href="/logout">Logout</a>
+
+</div>
+
+<div class="content">
+
+<div class="topbar">
+
+<h2>Subjects</h2>
+
+</div>
+
+<div class="container mt-4">
+
+<div class="card shadow p-4">
+
+<form method="POST">
+
+<div class="row g-2 align-items-center">
+
+<div class="col-md-6">
+
+<input
+type="text"
+class="form-control"
+name="subject"
+placeholder="Enter Subject"
+required>
+
+</div>
+
+<div class="col-md-3">
+
+<input
+type="color"
+class="form-control form-control-color w-100"
+name="color"
+value="#2F4B7C"
+title="Choose subject color">
+
+</div>
+
+<div class="col-md-3">
+
+<button
+class="btn btn-success w-100">
+
+Add Subject
+
+</button>
+
+</div>
+
+</div>
+
+</form>
+
+<hr>
+
+<form method="GET">
+
+<input
+type="text"
+class="form-control"
+name="search"
+placeholder="Search Subject">
+
+</form>
+
+<br>
+
+<h5>
+
+Total Subjects :
+
+{{ total }}
+
+</h5>
+
+<div class="row g-3">
+
+{% for subject in subjects %}
+
+<div class="col-md-6 col-lg-4">
+
+    <div class="card border-0 shadow-sm h-100" style="border-radius:var(--radius-md); border-left:6px solid {{ subject.color }} !important;">
+
+        <div class="card-body d-flex justify-content-between align-items-center">
+
+            <div class="d-flex align-items-center gap-2">
+                <span style="display:inline-block; width:14px; height:14px; border-radius:50%; background:{{ subject.color }};"></span>
+                <strong>{{ subject.name }}</strong>
+            </div>
+
+            <div class="d-flex gap-2">
+
+                <a
+                class="btn btn-outline-primary btn-sm"
+                href="/edit_subject/{{ subject.name }}">
+
+                Edit
+
+                </a>
+
+                <a
+                class="btn btn-outline-danger btn-sm"
+                href="/delete_subject/{{ subject.name }}"
+                onclick="return confirm('Delete this subject?');">
+
+                Delete
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% if not subjects %}
+<p class="text-muted text-center mt-4">No subjects yet — add one above.</p>
+{% endif %}
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

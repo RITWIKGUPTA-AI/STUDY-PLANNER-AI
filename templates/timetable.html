@@ -1,0 +1,285 @@
+{% extends "base.html" %}
+
+{% block title %}
+Timetable
+{% endblock %}
+
+{% block content %}
+
+<div class="wrapper">
+
+    <!-- Sidebar -->
+
+    <div class="sidebar">
+
+        <h3 class="text-center">🎓 Study Planner</h3>
+
+        <hr>
+
+        <a href="/dashboard">🏠 Dashboard</a>
+        <a href="/subjects">📚 Subjects</a>
+        <a href="/tasks">✅ Tasks</a>
+        <a href="/planner">📖 Study Planner</a>
+        <a href="/timetable">🗓️ Timetable</a>
+        <a href="/notes">📝 Notes</a>
+        <a href="/goals">🎯 Goals</a>
+        <a href="/attendance">📊 Attendance</a>
+        <a href="/analytics">📈 Analytics</a>
+
+        <hr>
+
+        <a href="/logout">🚪 Logout</a>
+
+    </div>
+
+    <!-- Main Content -->
+
+    <div class="content">
+
+        <!-- Top Bar -->
+
+        <div class="topbar d-flex justify-content-between align-items-center">
+
+            <h2>🗓️ Timetable Manager</h2>
+
+            <a href="/dashboard" class="btn btn-primary">
+
+                Dashboard
+
+            </a>
+
+        </div>
+
+        <div class="container-fluid mt-4">
+
+            <!-- Add Timetable -->
+
+            <div class="card shadow p-4 mb-4">
+
+                <h4 class="mb-3">
+
+                    ➕ Add Timetable
+
+                </h4>
+
+                <form method="POST">
+
+                    <div class="row">
+
+                        <div class="col-md-3">
+
+                            <select
+                                name="day"
+                                class="form-select"
+                                required>
+
+                                <option value="">Select Day</option>
+
+                                <option>Monday</option>
+                                <option>Tuesday</option>
+                                <option>Wednesday</option>
+                                <option>Thursday</option>
+                                <option>Friday</option>
+                                <option>Saturday</option>
+                                <option>Sunday</option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="col-md-3">
+
+                            <input
+                                type="text"
+                                name="subject"
+                                class="form-control"
+                                placeholder="Subject"
+                                required>
+
+                        </div>
+
+                        <div class="col-md-2">
+
+                            <input
+                                type="time"
+                                name="start_time"
+                                class="form-control"
+                                required>
+
+                        </div>
+
+                        <div class="col-md-2">
+
+                            <input
+                                type="time"
+                                name="end_time"
+                                class="form-control"
+                                required>
+
+                        </div>
+
+                        <div class="col-md-2">
+
+                            <button class="btn btn-success w-100">
+
+                                Add
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+            <!-- Search -->
+
+            <div class="card shadow p-3 mb-4">
+
+                <form method="GET">
+
+                    <div class="row">
+
+                        <div class="col-md-10">
+
+                            <input
+                                type="text"
+                                name="search"
+                                class="form-control"
+                                placeholder="Search by Subject or Day"
+                                value="{{ request.args.get('search','') }}">
+
+                        </div>
+
+                        <div class="col-md-2">
+
+                            <button class="btn btn-primary w-100">
+
+                                🔍 Search
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+            <!-- Statistics -->
+
+            <div class="alert alert-info">
+
+                <strong>Total Classes :</strong>
+
+                {{ total }}
+
+            </div>
+
+            <!-- Timetable -->
+
+            <div class="card shadow p-3">
+
+                <table class="table table-hover">
+
+                    <thead class="table-primary">
+
+                        <tr>
+
+                            <th>Day</th>
+                            <th>Subject</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                            <th width="180">Actions</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    {% if timetable %}
+
+                        {% for row in timetable %}
+
+                        <tr>
+
+                            <td>
+
+                                {{ row.day }}
+
+                            </td>
+
+                            <td>
+
+                                <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:{{ subject_colors.get(row.subject, '#999') }}; margin-right:6px;"></span>{{ row.subject }}
+
+                            </td>
+
+                            <td>
+
+                                {{ row.start_time }}
+
+                            </td>
+
+                            <td>
+
+                                {{ row.end_time }}
+
+                            </td>
+
+                            <td>
+
+                                <a
+                                    href="/timetable/edit/{{ loop.index0 }}"
+                                    class="btn btn-warning btn-sm">
+
+                                    ✏ Edit
+
+                                </a>
+
+                                <a
+                                    href="/timetable/delete/{{ loop.index0 }}"
+                                    class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Delete this timetable entry?')">
+
+                                    🗑 Delete
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <tr>
+
+                            <td colspan="5" class="text-center">
+
+                                📭 No Timetable Entries Found
+
+                            </td>
+
+                        </tr>
+
+                    {% endif %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

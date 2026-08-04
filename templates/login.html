@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}
+Login
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container">
+
+    <div class="row justify-content-center align-items-center vh-100">
+
+        <div class="col-md-5">
+
+            <div class="card shadow-lg p-4 rounded-4">
+
+                <h2 class="text-center mb-4">
+                    Student Study Planner
+                </h2>
+
+
+                <form method="POST" action="{{ url_for('login') }}">
+
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Username
+                        </label>
+
+                        <input
+                        type="text"
+                        class="form-control"
+                        name="username"
+                        placeholder="Enter username"
+                        autocomplete="username"
+                        required>
+
+                    </div>
+
+
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Password
+                        </label>
+
+                        <input
+                        type="password"
+                        class="form-control"
+                        name="password"
+                        placeholder="Enter password"
+                        autocomplete="current-password"
+                        required>
+
+                        <div class="text-end mt-1">
+                            <a href="{{ url_for('forgot_password') }}" class="small text-muted">Forgot password?</a>
+                        </div>
+
+                    </div>
+
+
+
+                    <button
+                    type="submit"
+                    class="btn btn-primary w-100">
+
+                        Login
+
+                    </button>
+
+
+                </form>
+
+
+
+                <div class="text-center mt-3">
+
+                    <p class="mb-2">
+                        Don't have an account?
+                    </p>
+
+
+                    {% if register_available %}
+
+                    <a href="{{ url_for('register') }}"
+                    class="btn btn-success w-100">
+
+                        Create New Account
+
+                    </a>
+
+                    {% endif %}
+
+
+                </div>
+
+
+
+                {% with messages = get_flashed_messages() %}
+
+                    {% if messages %}
+
+                    <div class="alert alert-danger mt-3">
+
+                        {{ messages[0] }}
+
+                    </div>
+
+                    {% endif %}
+
+                {% endwith %}
+
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}
+AI Flashcards
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+<div class="card shadow">
+
+<div class="card-header bg-warning">
+
+<h2>
+
+🧠 AI Flashcards
+
+</h2>
+
+</div>
+
+<div class="card-body">
+
+<form method="POST">
+
+    <div class="mb-3">
+        <label class="form-label">Target Exam <span class="text-muted small">(optional — tailors the AI's answer)</span></label>
+        <select name="exam" class="form-select">
+            <option value="">General / Not exam-specific</option>
+            <option>JEE</option>
+            <option>NEET</option>
+            <option>UPSC</option>
+            <option>GATE</option>
+            <option>CAT</option>
+            <option>CUET</option>
+            <option>SSC</option>
+            <option>Banking</option>
+        </select>
+    </div>
+
+
+<input
+
+class="form-control"
+
+name="topic"
+
+placeholder="Enter Topic"
+
+required>
+
+<br>
+
+<button
+
+class="btn btn-warning">
+
+Generate Flashcards
+
+</button>
+
+</form>
+
+{% if flashcards %}
+
+<hr>
+
+<pre style="white-space:pre-wrap;">
+
+{{ flashcards }}
+
+</pre>
+
+{% endif %}
+
+</div>
+
+</div>
+
+</div>
+
+{% include "partials/visual_aid.html" %}
+
+{% endblock %}

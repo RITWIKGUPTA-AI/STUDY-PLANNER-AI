@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}AI Daily Coach{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+<div class="card shadow-lg p-4">
+
+<h2 class="text-center text-success">
+
+🤖 AI Daily Study Coach
+
+</h2>
+
+<hr>
+
+<form method="POST">
+
+    <div class="mb-3">
+        <label class="form-label">Target Exam <span class="text-muted small">(optional — tailors the AI's answer)</span></label>
+        <select name="exam" class="form-select">
+            <option value="">General / Not exam-specific</option>
+            <option>JEE</option>
+            <option>NEET</option>
+            <option>UPSC</option>
+            <option>GATE</option>
+            <option>CAT</option>
+            <option>CUET</option>
+            <option>SSC</option>
+            <option>Banking</option>
+        </select>
+    </div>
+
+
+<div class="mb-3">
+
+<label>Your Name</label>
+
+<input
+type="text"
+name="name"
+class="form-control"
+required>
+
+</div>
+
+<div class="mb-3">
+
+<label>Today's Goal</label>
+
+<input
+type="text"
+name="goal"
+class="form-control"
+placeholder="Example: Finish Electrostatics">
+
+</div>
+
+<div class="mb-3">
+
+<label>Available Study Hours</label>
+
+<input
+type="number"
+name="hours"
+class="form-control"
+required>
+
+</div>
+
+<button class="btn btn-success w-100">
+
+🚀 Generate Today's AI Plan
+
+</button>
+
+</form>
+
+{% if plan %}
+
+<hr>
+
+<div class="alert alert-success">
+
+<pre style="white-space:pre-wrap;">{{ plan }}</pre>
+
+</div>
+
+{% endif %}
+
+</div>
+
+</div>
+
+{% include "partials/visual_aid.html" %}
+
+{% endblock %}

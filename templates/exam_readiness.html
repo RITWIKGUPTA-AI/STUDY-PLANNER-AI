@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block title %}
+AI Exam Readiness
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+<div class="card shadow-lg">
+
+<div class="card-header bg-success text-white">
+
+<h2>
+
+📊 AI Exam Readiness Dashboard
+
+</h2>
+
+</div>
+
+<div class="card-body">
+
+<form method="POST">
+
+    <div class="mb-3">
+        <label class="form-label">Target Exam <span class="text-muted small">(optional — tailors the AI's answer)</span></label>
+        <select name="exam" class="form-select">
+            <option value="">General / Not exam-specific</option>
+            <option>JEE</option>
+            <option>NEET</option>
+            <option>UPSC</option>
+            <option>GATE</option>
+            <option>CAT</option>
+            <option>CUET</option>
+            <option>SSC</option>
+            <option>Banking</option>
+        </select>
+    </div>
+
+
+<div class="mb-3">
+
+<label>
+
+Current Progress
+
+</label>
+
+<input
+class="form-control"
+name="progress"
+placeholder="70% Completed">
+
+</div>
+
+<div class="mb-3">
+
+<label>
+
+Revision Status
+
+</label>
+
+<input
+class="form-control"
+name="revision"
+placeholder="Completed Physics Revision">
+
+</div>
+
+<div class="mb-3">
+
+<label>
+
+Weakness Report
+
+</label>
+
+<textarea
+class="form-control"
+rows="3"
+name="weakness"></textarea>
+
+</div>
+
+<div class="mb-3">
+
+<label>
+
+Latest Mock Score
+
+</label>
+
+<input
+class="form-control"
+name="mock"
+placeholder="180/300">
+
+</div>
+
+<div class="mb-3">
+
+<label>
+
+Daily Study Hours
+
+</label>
+
+<input
+class="form-control"
+name="hours"
+placeholder="8">
+
+</div>
+
+<button
+class="btn btn-success">
+
+Generate Dashboard
+
+</button>
+
+</form>
+
+{% if report %}
+
+<hr>
+
+<div class="alert alert-light">
+
+<pre style="white-space:pre-wrap;">
+
+{{ report }}
+
+</pre>
+
+</div>
+
+<button
+onclick="window.print()"
+class="btn btn-primary">
+
+Print Report
+
+</button>
+
+{% endif %}
+
+</div>
+
+</div>
+
+</div>
+
+{% include "partials/visual_aid.html" %}
+
+{% endblock %}

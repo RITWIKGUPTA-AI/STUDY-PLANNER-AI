@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2>AI Notes Summarizer</h2>
+
+    <form method="POST">
+
+        <textarea name="notes"
+                  class="form-control"
+                  rows="10"
+                  placeholder="Paste your notes here..."
+                  required></textarea>
+
+        <button class="btn btn-success mt-3">
+            Summarize
+        </button>
+
+    </form>
+
+    {% if summary %}
+
+    <div class="card mt-4 p-3">
+        <pre style="white-space: pre-wrap;">{{ summary }}</pre>
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% include "partials/visual_aid.html" %}
+
+{% endblock %}

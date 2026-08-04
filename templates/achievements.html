@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}
+Achievements
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+<h2>🏆 Achievements</h2>
+
+<hr>
+
+<div class="card border-0 shadow-sm mb-4" style="border-radius:var(--radius-lg);">
+    <div class="card-body">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <h5 class="mb-0">🔥 Current Streak</h5>
+            <span class="fs-3 fw-bold" style="font-family:var(--font-display);">{{ streak }} day{{ 's' if streak != 1 else '' }}</span>
+        </div>
+        <p class="text-muted small mb-3">Log a study session in your Planner every day to keep this going.</p>
+
+        <div class="row g-3">
+            {% for a in auto_achievements %}
+            <div class="col-6 col-md-4 col-lg-3">
+                <div class="border rounded p-3 text-center h-100 {{ '' if a.unlocked else 'opacity-50' }}" style="border-radius:var(--radius-md)!important;">
+                    <div style="font-size:1.8rem;">{{ a.icon }}</div>
+                    <div class="fw-semibold small mt-1">{{ a.title }}</div>
+                    <div class="text-muted" style="font-size:.75rem;">{{ a.description }}</div>
+                    {% if a.unlocked %}
+                    <span class="badge bg-success mt-2">Unlocked</span>
+                    {% else %}
+                    <span class="badge bg-secondary mt-2">Locked</span>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<h5 class="mb-3">📝 My Achievement Journal</h5>
+
+<form method="POST">
+
+<div class="row">
+
+<div class="col-md-4">
+
+<input
+class="form-control"
+name="title"
+placeholder="Achievement Title"
+required>
+
+</div>
+
+<div class="col-md-5">
+
+<input
+class="form-control"
+name="description"
+placeholder="Description"
+required>
+
+</div>
+
+<div class="col-md-2">
+
+<input
+type="date"
+class="form-control"
+name="date"
+required>
+
+</div>
+
+<div class="col-md-1">
+
+<button class="btn btn-success w-100">
+
+Add
+
+</button>
+
+</div>
+
+</div>
+
+</form>
+
+<hr>
+
+<table class="table table-bordered table-striped">
+
+<thead>
+
+<tr>
+
+<th>Title</th>
+
+<th>Description</th>
+
+<th>Date</th>
+
+<th>Delete</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for achievement in achievements %}
+
+<tr>
+
+<td>{{ achievement.title }}</td>
+
+<td>{{ achievement.description }}</td>
+
+<td>{{ achievement.date }}</td>
+
+<td>
+
+<a
+href="{{ url_for('achievements.delete_achievement', index=loop.index0) }}"
+class="btn btn-danger btn-sm">
+
+Delete
+
+</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+{% endblock %}

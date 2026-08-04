@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}AI Visual Explainer{% endblock %}
+
+{% block content %}
+<div class="container mt-4" style="max-width:820px;">
+
+    <h2>🎨 AI Visual Explainer</h2>
+    <p class="text-muted">Get a plain-English explanation, a diagram, and an illustration for any concept.</p>
+
+    <div class="card shadow-sm border-0 mb-4" style="border-radius:var(--radius-lg);">
+        <div class="card-body p-4">
+            <form method="POST">
+
+                <label class="form-label fw-semibold">Concept</label>
+                <input type="text" name="concept" class="form-control" placeholder="e.g. Newton's Third Law, Photosynthesis, Binary Search Tree" value="{{ concept }}" required>
+
+                <div class="mb-3 mt-3">
+                    <label class="form-label">Target Exam <span class="text-muted small">(optional)</span></label>
+                    <select name="exam" class="form-select">
+                        <option value="">General / Not exam-specific</option>
+                        <option>JEE</option>
+                        <option>NEET</option>
+                        <option>UPSC</option>
+                        <option>GATE</option>
+                        <option>CAT</option>
+                        <option>CUET</option>
+                        <option>SSC</option>
+                        <option>Banking</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 mt-2">
+                    Explain Visually
+                </button>
+
+            </form>
+        </div>
+    </div>
+
+    {% if explanation %}
+
+    <div class="card shadow-sm border-0 mb-4" style="border-radius:var(--radius-lg);">
+        <div class="card-body p-4">
+            <h5>📖 Explanation</h5>
+            <p style="white-space:pre-wrap;">{{ explanation }}</p>
+        </div>
+    </div>
+
+    {% if mermaid_code %}
+    <div class="card shadow-sm border-0 mb-4" style="border-radius:var(--radius-lg);">
+        <div class="card-body p-4">
+            <h5 class="mb-3">🧩 Diagram</h5>
+            <div class="mermaid">
+{{ mermaid_code }}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if image_url %}
+    <div class="card shadow-sm border-0 mb-4" style="border-radius:var(--radius-lg);">
+        <div class="card-body p-4 text-center">
+            <h5 class="mb-3">🖼️ Illustration</h5>
+            <img src="{{ image_url }}" alt="Illustration of {{ concept }}" class="img-fluid rounded" style="max-height:420px; border-radius:var(--radius-md);" loading="lazy">
+            <p class="text-muted small mt-2">AI-generated illustration — may take a few seconds to load.</p>
+        </div>
+    </div>
+    {% endif %}
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

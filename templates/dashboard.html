@@ -1,0 +1,1097 @@
+{% extends "base.html" %}
+
+{% block title %}
+Dashboard
+{% endblock %}
+
+{% block content %}
+
+<div class="wrapper dashboard-bg">
+
+    <!-- ================= Sidebar ================= -->
+
+    <div class="sidebar">
+
+    <h3>Study Planner</h3>
+
+    <hr>
+
+    <div class="sidebar-menu">
+        <h6 class="text-uppercase text-white-50 mt-3 px-2">
+        🏠 MAIN MENU
+        </h6>
+        <h3 class="text-center mb-4">
+            <i class="bi bi-mortarboard-fill"></i>
+            Study Planner
+        </h3>
+
+        <hr>
+
+        <a href="/dashboard">
+            <i class="bi bi-speedometer2"></i>
+            Dashboard
+        </a>
+        <a href="{{ url_for('dark_theme') }}" class="btn btn-dark">
+            🌙 Dark Theme
+        </a>
+        <a href="{{ url_for('light_theme') }}" class="btn btn-light">
+            ☀️ Light Theme
+        </a>
+
+        <a href="/subjects">
+            <i class="bi bi-book"></i>
+            Subjects
+        </a>
+
+        <a href="/tasks">
+            <i class="bi bi-list-check"></i>
+            Tasks
+        </a>
+        
+
+
+        <a href="{{ url_for('planner.planner') }}">
+            <i class="bi bi-calendar-week"></i>
+            Study Planner
+        </a>
+
+        <a href="{{ url_for('timetable.timetable') }}">
+            <i class="bi bi-calendar3"></i>
+            Timetable
+        </a>
+
+        <a href="{{ url_for('notes.notes') }}">
+            <i class="bi bi-journal-text"></i>
+            Notes
+        </a>
+
+        <a href="{{ url_for('goals.goals') }}">
+            <i class="bi bi-bullseye"></i>
+            Goals
+        </a>
+
+        <a href="{{ url_for('attendance.attendance') }}">
+            <i class="bi bi-clipboard-check"></i>
+            Attendance
+        </a>
+
+        <a href="{{ url_for('analytics.analytics') }}">
+            <i class="bi bi-bar-chart-fill"></i>
+            Analytics
+        </a>
+        <a href="{{ url_for('settings.settings') }}">
+            <i class="bi bi-gear-fill"></i>
+            Settings
+        </a>
+
+        <hr>
+
+        <a href="{{ url_for('reminders.reminders') }}">
+            <i class="bi bi-bell-fill"></i>
+            Reminders
+        </a>
+
+        <a href="{{ url_for('profile.profile') }}">
+            <i class="bi bi-person-circle"></i>
+            Profile
+        </a>
+
+        <a href="{{ url_for('achievements.achievements') }}">
+            <i class="bi bi-trophy-fill"></i>
+            Achievements
+        </a>
+
+        {% if is_admin_user %}
+        <a href="/backup">
+            <i class="bi bi-cloud-arrow-down-fill"></i>
+            Backup
+        </a>
+        {% endif %}
+
+        <a href="{{ url_for('search.search') }}">
+            <i class="bi bi-search"></i>
+            Search
+        </a>
+         <a href="/logout">
+            <i class="bi bi-box-arrow-right"></i>
+            Logout
+        </a>
+        <hr>
+
+        <h6 class="text-uppercase text-white-50 px-3 mt-3">
+            AI Features
+        </h6>
+        <a href="{{ url_for('ai_tutor') }}"
+            class="btn btn-primary m-2">
+
+                🤖 AI Tutor
+
+        </a>
+
+
+        <a href="{{ url_for('ai_study_plan') }}">
+            🤖 AI Study Planner
+        </a>
+
+        <a href="{{ url_for('ai_summarizer') }}">
+            📄 AI Notes Summarizer
+        </a>
+
+        <a href="{{ url_for('ai_quiz') }}">
+            🧠 AI Quiz Generator
+        </a>
+
+        <a href="{{ url_for('ai_image') }}"
+            class="btn btn-success m-2">
+
+            📷 AI Image Solver
+
+        </a>
+        <a href="{{ url_for('ai_pdf') }}"
+            class="btn btn-danger m-2">
+
+            📄 AI PDF Tutor
+
+        </a>
+        <a href="{{ url_for('ai_mock_test') }}"
+            class="btn btn-primary m-2">
+
+            📝 AI Mock Test
+
+        </a>
+        <a href="{{ url_for('ai_flashcards') }}"
+            class="btn btn-warning m-2">
+
+            🧠 AI Flashcards
+
+        </a>
+        <a href="{{ url_for('ai_visual_explainer') }}"
+            class="btn btn-premium m-2">
+
+            🎨 AI Visual Explainer
+
+        </a>
+        <a href="{{ url_for('report_issue') }}"
+            class="btn btn-outline-secondary m-2">
+
+            🛠️ Report an Issue
+
+        </a>
+        <a href="{{ url_for('ai_progress') }}"
+            class="btn btn-success m-2">
+
+            📊 AI Progress
+
+        </a>
+        <a href="{{ url_for('ai_study_plan') }}"
+            class="btn btn-info m-2">
+
+            📅 AI Smart Planner
+
+        </a>
+
+        <hr>
+        <a href="{{ url_for('competitive_ai') }}"
+            class="btn btn-primary m-2">
+
+                🏆 AI Competitive Exam Hub
+
+        </a>
+        
+        <a href="{{ url_for('ai_revision_planner') }}"
+            class="btn btn-primary m-2">
+
+                📅 AI Revision Planner
+
+        </a>
+        <a href="{{ url_for('ai_weakness') }}"
+            class="btn btn-danger m-2">
+
+            🧠 AI Weakness Analyzer
+
+        </a>
+        <a href="{{ url_for('exam_readiness_page') }}"
+            class="btn btn-success m-2">
+
+            📊 AI Exam Readiness
+
+        </a>
+        <a href="{{ url_for('daily_coach') }}"
+            class="btn btn-primary m-2">
+
+            🤖 AI Daily Coach
+
+        </a>
+        <a href="{{ url_for('formula_sheet') }}"
+            class="btn btn-primary m-2">
+
+            📘 AI Formula Sheet
+
+        </a>
+        <a href="{{ url_for('mistake_notebook') }}"
+            class="btn btn-primary m-2">
+
+            📝 AI Mistake Notebook
+
+        </a>
+        <a href="{{ url_for('voice_question') }}"
+            class="btn btn-danger m-2">
+
+            🎙 Voice AI Tutor
+
+        </a>
+
+    </div> <!-- sidebar-menu -->
+
+    </div> <!-- sidebar -->
+
+    <!-- ================= Main Content ================= -->
+
+    <div class="content">
+        <!-- ================= Topbar ================= -->
+
+        <div class="topbar d-flex justify-content-between align-items-center flex-wrap">
+
+            <div>
+
+                <h2 class="fw-bold">
+
+                    Welcome {{ username }} 👋
+
+                </h2>
+
+                <p class="text-muted">
+
+                    {{ current_date }} |
+                    {{ current_time }}
+
+                </p>
+
+                {% if streak and streak > 0 %}
+                <span class="badge" style="background:linear-gradient(135deg, var(--color-accent), var(--color-accent-dark)); color:#3A2A00; font-size:.9rem; padding:8px 14px; border-radius:var(--radius-sm);">
+                    🔥 {{ streak }} day streak
+                </span>
+                {% endif %}
+
+            </div>
+
+            <div class="d-flex align-items-center">
+
+                <form
+                    action="{{ url_for('search.search') }}"
+                    method="GET"
+                    class="d-flex me-3">
+
+                    <input
+                        class="form-control me-2"
+                        type="text"
+                        name="q"
+                        placeholder="Search...">
+
+                    <button class="btn btn-primary">
+
+                        <i class="bi bi-search"></i>
+
+                    </button>
+
+                </form>
+
+                <button
+                    id="themeButton"
+                    class="btn btn-dark me-2">
+
+                    🌙
+
+                </button>
+
+                <a
+                    href="/logout"
+                    class="btn btn-danger">
+
+                    Logout
+
+                </a>
+
+            </div>
+
+        </div>
+        <!-- ================= Profile & Progress ================= -->
+
+<div class="container-fluid mt-4">
+
+    <div class="row">
+
+        <!-- Student Profile -->
+
+        <div class="col-lg-4">
+
+            <div class="card dashboard-card shadow">
+
+                <div class="card-body text-center">
+
+                    <img
+                        src="https://ui-avatars.com/api/?name={{ profile.name if profile.name else 'Student' }}&background=2F4B7C&color=fff&size=200"
+                        class="rounded-circle mb-3"
+                        width="120"
+                        height="120"
+                        onerror="this.onerror=null;this.style.display='none';">
+
+                    <h4>
+
+                        {{ profile.name if profile.name else "Student" }}
+
+                    </h4>
+
+                    <p class="text-muted">
+
+                        {{ profile.target_exam if profile.target_exam else "Target Exam" }}
+
+                    </p>
+
+                    <a
+                        href="/profile"
+                        class="btn btn-primary">
+
+                        View Profile
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Progress -->
+
+        <div class="col-lg-8">
+
+            <div class="row">
+
+                <div class="col-md-6">
+
+                    <div class="card dashboard-card shadow">
+
+                        <div class="card-body">
+
+                            <h5>
+
+                                📊 Attendance
+
+                            </h5>
+
+                            <h2>
+
+                                {{ attendance_percent }}%
+
+                            </h2>
+
+                            <div class="progress">
+
+                                <div
+                                    class="progress-bar bg-success"
+                                    style="width: {{ attendance_percent }}%;">
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <div class="card dashboard-card shadow">
+
+                        <div class="card-body">
+
+                            <h5>
+
+                                🎯 Completed Goals
+
+                            </h5>
+
+                            <h2>
+
+                                {{ completed_goals }}
+
+                            </h2>
+
+                            <small>
+
+                                out of {{ goals }}
+
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-6 mt-4">
+
+                    <div class="card dashboard-card shadow">
+
+                        <div class="card-body">
+
+                            <h5>
+
+                                🔔 Today's Reminders
+
+                            </h5>
+
+                            <h2>
+
+                                {{ todays_reminders|length }}
+
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-6 mt-4">
+
+                    <div class="card dashboard-card shadow">
+
+                        <div class="card-body">
+
+                            <h5>
+
+                                📖 Today's Classes
+
+                            </h5>
+
+                            <h2>
+
+                                {{ todays_classes|length }}
+
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+        <!-- ================= Statistics ================= -->
+
+        <div class="container-fluid mt-4">
+
+            <div class="row g-4">
+
+                <div class="col-xl-3 col-md-6">
+
+                    <div class="card dashboard-card shadow">
+
+                        <div class="card-body">
+
+                            <div class="d-flex justify-content-between">
+
+                                <div>
+
+                                    <small class="text-muted">
+
+                                        Subjects
+
+                                    </small>
+
+                                    <h2>
+
+                                        {{ subjects }}
+
+                                    </h2>
+
+                                </div>
+
+                                <i class="bi bi-book-half fs-1 text-primary"></i>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-xl-3 col-md-6">
+
+                    <div class="card dashboard-card shadow">
+
+                        <div class="card-body">
+
+                            <div class="d-flex justify-content-between">
+
+                                <div>
+
+                                    <small class="text-muted">
+
+                                        Tasks
+
+                                    </small>
+
+                                    <h2>
+
+                                        {{ tasks }}
+
+                                    </h2>
+
+                                </div>
+
+                                <i class="bi bi-list-task fs-1 text-success"></i>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-xl-3 col-md-6">
+
+                    <div class="card dashboard-card shadow">
+
+                        <div class="card-body">
+
+                            <div class="d-flex justify-content-between">
+
+                                <div>
+
+                                    <small class="text-muted">
+
+                                        Notes
+
+                                    </small>
+
+                                    <h2>
+
+                                        {{ notes }}
+
+                                    </h2>
+
+                                </div>
+
+                                <i class="bi bi-journal-richtext fs-1 text-warning"></i>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-xl-3 col-md-6">
+
+                    <div class="card dashboard-card shadow">
+
+                        <div class="card-body">
+
+                            <div class="d-flex justify-content-between">
+
+                                <div>
+
+                                    <small class="text-muted">
+
+                                        Goals
+
+                                    </small>
+
+                                    <h2>
+
+                                        {{ goals }}
+
+                                    </h2>
+
+                                </div>
+
+                                <i class="bi bi-bullseye fs-1 text-danger"></i>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ================= Quick Actions ================= -->
+
+        <div class="card shadow mt-4">
+
+            <div class="card-body">
+
+                <h4>
+
+                    ⚡ Quick Actions
+
+                </h4>
+
+                <div class="row g-3 mt-2">
+
+                    <div class="col-md-3">
+
+                        <a
+                            href="/tasks"
+                            class="btn btn-success w-100">
+
+                            ➕ Add Task
+
+                        </a>
+
+                    </div>
+
+                    <div class="col-md-3">
+
+                        <a
+                            href="/subjects"
+                            class="btn btn-primary w-100">
+
+                            📚 Add Subject
+
+                        </a>
+
+                    </div>
+
+                    <div class="col-md-3">
+
+                        <a
+                            href="{{ url_for('notes.notes') }}"
+                            class="btn btn-warning w-100">
+
+                            📝 Add Note
+
+                        </a>
+
+                    </div>
+                    <div class="row mt-3">
+
+                        <div class="col-md-4">
+
+                            <a href="{{ url_for('ai_study_plan') }}"
+                                class="btn btn-outline-primary w-100">
+
+                                    🤖 AI Study Plan
+
+                            </a>
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                            <a href="{{ url_for('ai_summarizer') }}"
+                                class="btn btn-outline-success w-100">
+
+                                    📄 AI Summarizer
+
+                            </a>
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                            <a href="{{ url_for('ai_quiz') }}"
+                                class="btn btn-outline-warning w-100">
+
+                                    🧠 AI Quiz
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-3">
+
+                        <a
+                            href="{{ url_for('goals.goals') }}"
+                            class="btn btn-danger w-100">
+
+                            🎯 Add Goal
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ================= Today's Progress ================= -->
+
+        <div class="card shadow mt-4">
+
+            <div class="card-body">
+
+                <h4>
+
+                    📈 Today's Progress
+
+                </h4>
+
+                <div class="mb-3">
+
+                    <label class="mb-1">
+
+                        Tasks Completed
+
+                    </label>
+
+                    <div class="progress">
+
+                        <div
+                            class="progress-bar bg-warning"
+                            style="width:{{ goal_progress }}%;">
+
+                            {{ goal_progress }}%
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="mb-1">
+
+                        Goal Progress
+
+                    </label>
+
+                    <div class="progress">
+
+                        <div
+                            class="progress-bar bg-warning"
+                            style="width:45%;">
+
+                            45%
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ========= PART 2 STARTS BELOW ========= -->
+                 <!-- ================= Recent Activity ================= -->
+
+        <div class="card shadow mt-4">
+
+            <div class="card-body">
+
+                <h4>
+
+                    🔔 Recent Activity
+
+                </h4>
+
+                <ul class="list-group mt-3">
+
+                    <li class="list-group-item d-flex justify-content-between">
+
+                        <span>✅ Mathematics task completed</span>
+
+                        <small class="text-muted">Today</small>
+
+                    </li>
+
+                    <li class="list-group-item d-flex justify-content-between">
+
+                        <span>📚 Physics added to planner</span>
+
+                        <small class="text-muted">Today</small>
+
+                    </li>
+
+                    <li class="list-group-item d-flex justify-content-between">
+
+                        <span>📝 Chemistry notes updated</span>
+
+                        <small class="text-muted">Yesterday</small>
+
+                    </li>
+
+                    <li class="list-group-item d-flex justify-content-between">
+
+                        <span>🎯 Weekly study goal created</span>
+
+                        <small class="text-muted">Yesterday</small>
+
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+        <!-- ================= Upcoming Schedule ================= -->
+
+        <div class="card shadow mt-4">
+
+            <div class="card-body">
+
+                <h4>
+
+                    🗓️ Upcoming Schedule
+
+                </h4>
+
+                <div class="table-responsive mt-3">
+
+                    <table class="table table-hover">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Time</th>
+
+                                <th>Subject</th>
+
+                                <th>Topic</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            <tr>
+
+                                <td>08:00 AM</td>
+
+                                <td>Physics</td>
+
+                                <td>Electrostatics</td>
+
+                            </tr>
+
+                            <tr>
+
+                                <td>10:00 AM</td>
+
+                                <td>Mathematics</td>
+
+                                <td>Integration</td>
+
+                            </tr>
+
+                            <tr>
+
+                                <td>02:00 PM</td>
+
+                                <td>Chemistry</td>
+
+                                <td>Organic Reactions</td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ================= Motivational Quote ================= -->
+
+        <div class="card shadow mt-4 bg-dark text-white">
+
+            <div class="card-body text-center p-4">
+
+                <i class="bi bi-quote fs-1 text-warning"></i>
+
+                <h4 class="mt-3">
+
+                    “Success is the sum of small efforts repeated day in and day out.”
+
+                </h4>
+
+                <p class="mb-0 text-light">
+
+                    — Robert Collier
+
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- ================= Hero Banner ================= -->
+
+        <div class="container-fluid mt-4">
+            <div class="position-relative overflow-hidden" style="border-radius:var(--radius-lg); height:220px; box-shadow:var(--shadow-md);">
+                <img src="https://image.pollinations.ai/prompt/futuristic%20AI%20technology%20studying%2C%20glowing%20digital%20brain%2C%20neural%20network%2C%20students%20preparing%20for%20competitive%20exams%2C%20holographic%20books%20and%20data%2C%20blue%20and%20purple%20gradient%2C%20sci-fi%20digital%20art%2C%20wide%20banner?width=1400&height=400&nologo=true"
+                     alt="AI-powered study banner"
+                     loading="lazy"
+                     onerror="this.onerror=null;this.style.display='none';"
+                     style="width:100%; height:100%; object-fit:cover; filter:brightness(0.55);">
+                <div class="position-absolute top-50 start-0 translate-middle-y ps-4 ps-md-5 text-white" style="max-width:600px;">
+                    <h2 class="fw-bold" style="font-family:var(--font-display);">Study Smarter with AI 🚀</h2>
+                    <p class="mb-0 d-none d-md-block">Personalized plans, mock tests, and visual explainers for JEE, NEET, UPSC, GATE, CAT, CUET, SSC & Banking.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= Welcome Card ================= -->
+
+        <div class="container-fluid mt-4">
+
+            <div class="card dashboard-card p-4 shadow">
+
+                <h3 class="fw-bold">
+
+                    Welcome to Student Study Planner 🚀
+
+                </h3>
+
+                <p class="text-muted">
+
+                    Manage your studies, tasks, timetable, attendance, goals and notes from one professional dashboard. Stay organized, track your progress, and improve your productivity every day.
+
+                </p>
+
+                <hr>
+
+                <div class="row text-center g-3">
+
+                    <div class="col-md-3 col-6">
+
+                        <div class="p-3 rounded bg-light">
+
+                            📚<br>
+
+                            <strong>Subjects</strong>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-3 col-6">
+
+                        <div class="p-3 rounded bg-light">
+
+                            ✅<br>
+
+                            <strong>Tasks</strong>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-3 col-6">
+
+                        <div class="p-3 rounded bg-light">
+
+                            📝<br>
+
+                            <strong>Notes</strong>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-3 col-6">
+
+                        <div class="p-3 rounded bg-light">
+
+                            🎯<br>
+
+                            <strong>Goals</strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ================= AI Tools Grid ================= -->
+
+        <div class="container-fluid mt-4" id="ai-tools">
+
+            <h4 class="fw-bold mb-1" style="font-family:var(--font-display);">✨ AI-Powered Tools</h4>
+            <p class="text-muted mb-3">Everything you need to study smarter — pick a tool to get started.</p>
+
+            <div class="row g-3">
+
+                {% set ai_tools = [
+                    (url_for('ai_tutor'), '🤖', 'AI Tutor', 'Ask anything, get instant answers', 'linear-gradient(135deg,#2F4B7C,#4A6BA8)'),
+                    (url_for('ai_study_plan'), '📅', 'Smart Study Plan', 'Personalized daily timetable', 'linear-gradient(135deg,#2E9E6D,#24815A)'),
+                    (url_for('ai_mock_test'), '📝', 'Mock Test', 'Practice with AI-generated tests', 'linear-gradient(135deg,#2F4B7C,#20365C)'),
+                    (url_for('ai_flashcards'), '🧠', 'Flashcards', 'Quick revision cards for any topic', 'linear-gradient(135deg,#F2A93B,#D68F1F)'),
+                    (url_for('ai_visual_explainer'), '🎨', 'Visual Explainer', 'Diagrams & illustrations for any concept', 'linear-gradient(135deg,#F2A93B,#E15554)'),
+                    (url_for('formula_sheet'), '📐', 'Formula Sheet', 'Instant revision sheets', 'linear-gradient(135deg,#4A6BA8,#2F4B7C)'),
+                    (url_for('ai_revision_planner'), '🔄', 'Revision Planner', 'Smart last-minute revision plans', 'linear-gradient(135deg,#2E9E6D,#2F4B7C)'),
+                    (url_for('ai_quiz'), '❓', 'Quiz Generator', 'Instant quizzes on any topic', 'linear-gradient(135deg,#E15554,#C13F3E)'),
+                    (url_for('ai_pdf'), '📄', 'PDF Summarizer', 'Upload notes, get a summary', 'linear-gradient(135deg,#20365C,#2F4B7C)'),
+                    (url_for('ai_image'), '📷', 'Image Solver', 'Snap a question, get it solved', 'linear-gradient(135deg,#2E9E6D,#F2A93B)'),
+                    (url_for('exam_readiness_page'), '🎯', 'Exam Readiness', 'Check how ready you really are', 'linear-gradient(135deg,#D68F1F,#E15554)'),
+                    (url_for('competitive_ai'), '🏆', 'Competitive Exam Hub', 'JEE, NEET, UPSC & more', 'linear-gradient(135deg,#2F4B7C,#F2A93B)'),
+                ] %}
+
+                {% for href, icon, title, desc, gradient in ai_tools %}
+                <div class="col-6 col-md-4 col-lg-3">
+                    <a href="{{ href }}" class="text-decoration-none">
+                        <div class="ai-tool-tile h-100">
+                            <div class="ai-tool-icon" style="background:{{ gradient }};">{{ icon }}</div>
+                            <div class="ai-tool-title">{{ title }}</div>
+                            <div class="ai-tool-desc">{{ desc }}</div>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        <!-- ================= Footer ================= -->
+
+        <div class="text-center text-muted mt-4 mb-2">
+
+            <small>
+
+                © {{ current_year }} Student Study Planner | Built with Flask & Bootstrap
+
+            </small>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

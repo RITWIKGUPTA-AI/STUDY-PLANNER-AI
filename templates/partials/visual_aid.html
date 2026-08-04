@@ -1,0 +1,23 @@
+{# Reusable visual-aid block: expects `mermaid_code` and `image_url` in context.
+   Include with: {% include "partials/visual_aid.html" %} #}
+
+{% if mermaid_code %}
+<div class="card shadow-sm border-0 mb-4" style="border-radius:var(--radius-lg);">
+    <div class="card-body p-4">
+        <h5 class="mb-3">🧩 Concept Diagram</h5>
+        <div class="mermaid">
+{{ mermaid_code }}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% if image_url %}
+<div class="card shadow-sm border-0 mb-4" style="border-radius:var(--radius-lg);">
+    <div class="card-body p-4 text-center">
+        <h5 class="mb-3">🖼️ Illustration</h5>
+        <img src="{{ image_url }}" alt="Concept illustration" class="img-fluid" style="max-height:380px; border-radius:var(--radius-md);" loading="lazy">
+        <p class="text-muted small mt-2 mb-0">AI-generated illustration — may take a few seconds to load.</p>
+    </div>
+</div>
+{% endif %}
